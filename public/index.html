@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Authentication Demo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: hsl(240 10% 3.9%);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: hsl(0 0% 100%);
+        }
+        
+        /* shadcn-inspired styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition-property: color, background-color, border-color;
+            transition-duration: 150ms;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary {
+            background-color: hsl(222.2 47.4% 11.2%);
+            color: hsl(210 40% 98%);
+        }
+        
+        .btn-primary:hover {
+            background-color: hsl(217.2 32.6% 17.5%);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background-color: hsl(210 40% 96.1%);
+            color: hsl(222.2 47.4% 11.2%);
+        }
+        
+        .btn-secondary:hover {
+            background-color: hsl(210 40% 92%);
+        }
+        
+        .input {
+            display: flex;
+            width: 100%;
+            border-radius: 0.375rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            background-color: transparent;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: hsl(221.2 83.2% 53.3%);
+            box-shadow: 0 0 0 1px hsl(221.2 83.2% 53.3%);
+        }
+        
+        .card {
+            border-radius: 0.5rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            background-color: hsl(0 0% 100%);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(100%);
+            max-width: 350px;
+            align-items: center;
+            border-left: 4px solid;
+        }
+        
+        .toast-success {
+            border-left-color: hsl(142.1 76.2% 36.3%);
+        }
+        
+        .toast-error {
+            border-left-color: hsl(0 84.2% 60.2%);
+        }
+        
+        .toast-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        
+        .toast-message {
+            flex: 1;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: hsl(240 3.8% 46.1%);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .spinner {
+            display: inline-block;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .steps {
+            counter-reset: step;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem;
+        }
+        
+        .step {
+            display: grid;
+            grid-template-columns: min-content 1fr;
+            gap: 1.5rem;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: "";
+            position: absolute;
+            left: 0.625rem;
+            top: 2.5rem;
+            bottom: -2rem;
+            transform: translateX(-50%);
+            width: 1px;
+            background-color: hsl(240 5.9% 90%);
+        }
+        
+        .step-circle {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            background-color: hsl(240 5.9% 90%);
+            color: hsl(240 10% 3.9%);
+            font-weight: 500;
+        }
+        
+        .step-circle::before {
+            counter-increment: step;
+            content: counter(step);
+        }
+        
+        .step.active .step-circle {
+            background-color: hsl(221.2 83.2% 53.3%);
+            color: white;
+        }
+        
+        .step.complete .step-circle {
+            background-color: hsl(142.1 76.2% 36.3%);
+            color: white;
+        }
+        
+        .step.complete .step-circle::before {
+            content: "✓";
+        }
+        
+        .performance-metric {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: hsl(240 3.8% 46.1%);
+        }
+        
+        .dev-mode-banner {
+            background-color: hsl(47.9 95.8% 53.1%);
+            color: hsl(20 5.9% 10%);
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .test-data-section {
+            border-radius: 0.5rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            background-color: hsl(0 0% 100%);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-data-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: hsl(222.2 47.4% 11.2%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="dev-mode-banner">
+        ⚠️ DEVELOPMENT MODE - Running with placeholder credentials ⚠️
+    </div>
+    
+    <header class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-gray-900">Aadhaar Authentication Demo</h1>
+        <p class="text-gray-600">This demo showcases how the Aadhaar authentication service can be integrated into your application</p>
+    </header>
+
+    <div class="test-data-section">
+        <h2 class="flex items-center"><i class="fa-solid fa-clipboard-list mr-2"></i> Sample Test Data</h2>
+        <p class="mb-4">Use the following sample data to test the demo application:</p>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 text-left font-medium border border-gray-200">Data Type</th>
+                        <th class="p-3 text-left font-medium border border-gray-200">Sample Values</th>
+                        <th class="p-3 text-left font-medium border border-gray-200">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3 border border-gray-200">Aadhaar UIDs</td>
+                        <td class="p-3 border border-gray-200">
+                            <code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">999941057058</code> (pre-filled)<br>
+                            <code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">123456789012</code><br>
+                            <code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">999999999999</code>
+                        </td>
+                        <td class="p-3 border border-gray-200">Must be 12 digits</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3 border border-gray-200">OTP</td>
+                        <td class="p-3 border border-gray-200"><code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">123456</code> or any 6 digits</td>
+                        <td class="p-3 border border-gray-200">Any 6-digit OTP works in development mode</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3 border border-gray-200">Redirect URI</td>
+                        <td class="p-3 border border-gray-200"><code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">http://localhost:3002/callback</code></td>
+                        <td class="p-3 border border-gray-200">Default callback endpoint</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-500 text-sm">
+            <strong>Note:</strong> In development mode, the system automatically generates transaction IDs and state tokens. 
+            No real authentication occurs, and the system will accept any valid formatted input.
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">QR Code Authentication</h2>
+            <p class="text-gray-600 mb-4">Authenticate using a QR code that can be scanned with a mobile device</p>
+            
+            <form id="qrForm">
+                <div class="mb-4">
+                    <label for="qrUid" class="block mb-2 font-medium text-gray-700">Aadhaar UID (12 digits):</label>
+                    <input type="text" id="qrUid" placeholder="999941057058" value="999941057058" maxlength="12" required
+                           class="input">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="qrRedirectUri" class="block mb-2 font-medium text-gray-700">Redirect URI after authentication:</label>
+                    <input type="text" id="qrRedirectUri" placeholder="http://localhost:3002/callback" value="http://localhost:3002/callback" required
+                           class="input">
+                </div>
+                
+                <button type="submit" id="qrSubmitBtn" class="btn btn-primary w-full">
+                    Generate QR Code
+                </button>
+            </form>
+            
+            <div id="qrCodeContainer" class="text-center my-6 min-h-[200px]"></div>
+            
+            <div id="qrActionButtons" class="flex gap-2 mt-4" style="display: none;">
+                <button id="downloadQrBtn" class="btn btn-secondary flex-1">
+                    <i class="fa-solid fa-download mr-2"></i> Download QR
+                </button>
+            </div>
+            
+            <div class="mt-6">
+                <div class="steps">
+                    <div class="step active" id="step1">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Enter Aadhaar UID and redirect URI</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Generate and scan the QR code with your phone</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Enter OTP on the phone</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Get redirected back with authentication token</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="qrError" class="mt-4 p-3 rounded bg-red-50 text-red-600 border-l-4 border-red-600" style="display: none;"></div>
+            <div id="qrDevExplanation" class="mt-4 p-3 rounded bg-amber-50 text-amber-800 border-l-4 border-amber-500 text-sm" style="display: none;"></div>
+            <div id="qrPerformance" class="performance-metric" style="display: none;"></div>
+        </div>
+        
+        <div class="card">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Link Authentication</h2>
+            <p class="text-gray-600 mb-4">Generate a link that can be opened directly to authenticate with OTP</p>
+            
+            <form id="linkForm">
+                <div class="mb-4">
+                    <label for="linkUid" class="block mb-2 font-medium text-gray-700">Aadhaar UID (12 digits):</label>
+                    <input type="text" id="linkUid" placeholder="999941057058" value="999941057058" maxlength="12" required
+                           class="input">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="linkRedirectUri" class="block mb-2 font-medium text-gray-700">Redirect URI after authentication:</label>
+                    <input type="text" id="linkRedirectUri" placeholder="http://localhost:3002/callback" value="http://localhost:3002/callback" required
+                           class="input">
+                </div>
+                
+                <button type="submit" id="linkSubmitBtn" class="btn btn-primary w-full">
+                    Generate Authentication Link
+                </button>
+            </form>
+            
+            <div id="linkResult" class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r" style="display: none;">
+                <p class="font-medium mb-2">Authentication link generated:</p>
+                <p class="mb-4 break-all"><a href="#" id="authLink" target="_blank" class="text-blue-600 hover:underline"></a></p>
+                <div id="linkActionButtons" class="flex">
+                    <button id="copyLinkBtn" class="btn btn-secondary w-full">
+                        <i class="fa-solid fa-copy mr-2"></i> Copy Link
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <div class="steps">
+                    <div class="step active" id="linkStep1">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Enter Aadhaar UID and redirect URI</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="linkStep2">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Generate and click on the authentication link</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="linkStep3">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Enter OTP on the page</h3>
+                        </div>
+                    </div>
+                    <div class="step" id="linkStep4">
+                        <div class="step-circle"></div>
+                        <div>
+                            <h3 class="font-medium">Get redirected back with authentication token</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="linkError" class="mt-4 p-3 rounded bg-red-50 text-red-600 border-l-4 border-red-600" style="display: none;"></div>
+            <div id="linkDevExplanation" class="mt-4 p-3 rounded bg-amber-50 text-amber-800 border-l-4 border-amber-500 text-sm" style="display: none;"></div>
+            <div id="linkPerformance" class="performance-metric" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <div id="toast-container"></div>
+    
+    <footer class="mt-12 text-center text-gray-500 text-sm">
+        <p>This is a demonstration of Aadhaar authentication. In development mode, any 6-digit OTP (e.g. 123456) will work.</p>
+    </footer>
+
+    <script>
+        // Toast management
+        function showToast(message, type = 'success', duration = 5000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let icon = '';
+            if (type === 'success') {
+                icon = '<i class="fa-solid fa-check-circle toast-icon text-green-600"></i>';
+            } else if (type === 'error') {
+                icon = '<i class="fa-solid fa-exclamation-circle toast-icon text-red-600"></i>';
+            }
+            
+            toast.innerHTML = `
+                ${icon}
+                <div class="toast-message">${message}</div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger reflow to enable the animation
+            void toast.offsetWidth;
+            
+            // Show the toast
+            toast.classList.add('show');
+            
+            // Close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            });
+            
+            // Auto close after duration
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (container.contains(toast)) {
+                            container.removeChild(toast);
+                        }
+                    }, 300);
+                }
+            }, duration);
+        }
+        
+        // Performance metrics helper
+        function recordPerformance(containerId, startTime) {
+            const duration = ((performance.now() - startTime) / 1000).toFixed(2);
+            const container = document.getElementById(containerId);
+            container.textContent = `Request completed in ${duration}s`;
+            container.style.display = 'block';
+            return duration;
+        }
+        
+        // Helper function to handle development mode errors
+        function handleDevModeError(error, qrContainer, errorDiv, devExplanationDiv) {
+            console.error('Error:', error);
+            
+            // Display the normal error message
+            errorDiv.textContent = error.message || 'Failed to generate code';
+            errorDiv.style.display = 'block';
+            
+            // Show development explanation
+            devExplanationDiv.innerHTML = `
+                <strong>Development Mode Explanation:</strong>
+                <p>This error is expected in development mode. In a production environment with real credentials, this would connect to the actual UIDAI API.</p>
+                <p>Error details: ${error.message}</p>
+                <p>For demonstration purposes, here's what the successful response would look like:</p>
+            `;
+            devExplanationDiv.style.display = 'block';
+            
+            return true;
+        }
+
+        // Download QR code as image
+        function downloadQRCode() {
+            const qrImg = document.querySelector('#qrCodeContainer img');
+            if (!qrImg) return;
+            
+            // Create a canvas
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = qrImg.naturalWidth;
+            canvas.height = qrImg.naturalHeight;
+            
+            // Draw the image on the canvas
+            ctx.drawImage(qrImg, 0, 0);
+            
+            // Create a temporary link to download the image
+            const a = document.createElement('a');
+            a.href = canvas.toDataURL('image/png');
+            a.download = 'aadhaar-qr-code.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showToast('QR Code downloaded successfully', 'success');
+        }
+
+        // Copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(
+                () => showToast('Copied to clipboard', 'success'),
+                () => showToast('Failed to copy to clipboard', 'error')
+            );
+        }
+
+        // QR Code Form Submission
+        document.getElementById('qrForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const uid = document.getElementById('qrUid').value;
+            const redirectUri = document.getElementById('qrRedirectUri').value;
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const errorDiv = document.getElementById('qrError');
+            const devExplanationDiv = document.getElementById('qrDevExplanation');
+            const submitBtn = document.getElementById('qrSubmitBtn');
+            const downloadBtn = document.getElementById('downloadQrBtn');
+            const actionButtons = document.getElementById('qrActionButtons');
+            
+            // Update wizard steps
+            document.getElementById('step1').classList.add('complete');
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            
+            // Validate inputs
+            if (!uid || uid.length !== 12 || !/^\d+$/.test(uid)) {
+                errorDiv.textContent = 'Please enter a valid 12-digit Aadhaar UID';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                // Show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner"></span> Generating...';
+                qrContainer.innerHTML = '<div class="flex justify-center items-center h-40"><div class="spinner" style="width: 2rem; height: 2rem; border-width: 3px; border-top-color: hsl(217.2 32.6% 17.5%); border-color: rgba(0,0,0,0.1);"></div></div>';
+                errorDiv.style.display = 'none';
+                devExplanationDiv.style.display = 'none';
+                document.getElementById('qrPerformance').style.display = 'none';
+                actionButtons.style.display = 'none';
+                
+                // Record start time for performance metrics
+                const startTime = performance.now();
+                
+                // Make API request
+                const response = await fetch(`/auth/qr?uid=${uid}&redirectUri=${encodeURIComponent(redirectUri)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+                
+                try {
+                    const data = await response.json();
+                    
+                    // Record performance
+                    recordPerformance('qrPerformance', startTime);
+                    
+                    // Display QR code
+                    if (data.qrDataUrl) {
+                        const img = document.createElement('img');
+                        img.src = data.qrDataUrl;
+                        img.alt = 'Authentication QR Code';
+                        img.style.maxWidth = '100%';
+                        
+                        qrContainer.innerHTML = '';
+                        qrContainer.appendChild(img);
+                        
+                        // Add transaction details
+                        const details = document.createElement('p');
+                        details.className = 'mt-2 text-sm text-gray-600';
+                        details.textContent = `Transaction ID: ${data.txnId}`;
+                        qrContainer.appendChild(details);
+                        
+                        // Show the download button
+                        actionButtons.style.display = 'flex';
+                        
+                        // Show success toast
+                        showToast('QR Code generated successfully', 'success');
+                    } else {
+                        throw new Error('No QR code returned from the server');
+                    }
+                } catch (dataError) {
+                    console.error('Original dataError caught within QR generation:', dataError);
+                    throw new Error('Invalid response format from server');
+                }
+                
+            } catch (error) {
+                // Show development mode explanation and placeholder
+                if (handleDevModeError(error, qrContainer, errorDiv, devExplanationDiv)) {
+                    // Create container for the QR code and overlay
+                    const qrWrapper = document.createElement('div');
+                    qrWrapper.style.position = 'relative';
+                    qrWrapper.style.maxWidth = '250px';
+                    qrWrapper.style.margin = '0 auto';
+                    
+                    // Create placeholder QR code
+                    const img = document.createElement('img');
+                    img.src = "/images/sampleqr.png";
+                    img.alt = 'Placeholder Authentication QR Code';
+                    img.style.maxWidth = '100%';
+                    img.style.display = 'block';
+                    
+                    // Create overlay text
+                    const overlay = document.createElement('div');
+                    overlay.className = 'qr-overlay';
+                    overlay.innerHTML = '<strong>Placeholder QR Code</strong><br>This is a dummy QR code for demonstration purposes.';
+                    
+                    // Add elements to container
+                    qrWrapper.appendChild(img);
+                    qrWrapper.appendChild(overlay);
+                    
+                    // Replace container content
+                    qrContainer.innerHTML = '';
+                    qrContainer.appendChild(qrWrapper);
+                    
+                    // Add transaction details
+                    const details = document.createElement('p');
+                    details.className = 'mt-2 text-sm text-gray-600';
+                    details.textContent = `Transaction ID: demo-transaction-id`;
+                    qrContainer.appendChild(details);
+                    
+                    // Record mock performance
+                    recordPerformance('qrPerformance', startTime);
+                    
+                    // Show the download button
+                    actionButtons.style.display = 'flex';
+                    
+                    // Show toast
+                    showToast('QR Code generated (demo mode)', 'success');
+                }
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Generate QR Code';
+            }
+        });
+        
+        // Link Form Submission
+        document.getElementById('linkForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const uid = document.getElementById('linkUid').value;
+            const redirectUri = document.getElementById('linkRedirectUri').value;
+            const resultDiv = document.getElementById('linkResult');
+            const authLinkElement = document.getElementById('authLink');
+            const errorDiv = document.getElementById('linkError');
+            const devExplanationDiv = document.getElementById('linkDevExplanation');
+            const submitBtn = document.getElementById('linkSubmitBtn');
+            
+            // Update wizard steps
+            document.getElementById('linkStep1').classList.add('complete');
+            document.getElementById('linkStep1').classList.remove('active');
+            document.getElementById('linkStep2').classList.add('active');
+            
+            // Validate inputs
+            if (!uid || uid.length !== 12 || !/^\d+$/.test(uid)) {
+                errorDiv.textContent = 'Please enter a valid 12-digit Aadhaar UID';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner"></span> Generating...';
+                resultDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+                devExplanationDiv.style.display = 'none';
+                document.getElementById('linkPerformance').style.display = 'none';
+                
+                // Record start time for performance metrics
+                const startTime = performance.now();
+                
+                // Make API request
+                const response = await fetch(`/auth/link?uid=${uid}&redirectUri=${encodeURIComponent(redirectUri)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+                
+                try {
+                    const data = await response.json();
+                    
+                    // Record performance
+                    recordPerformance('linkPerformance', startTime);
+                    
+                    // Display link
+                    if (data.authUrl) {
+                        authLinkElement.href = data.authUrl;
+                        authLinkElement.textContent = data.authUrl;
+                        resultDiv.style.display = 'block';
+                        
+                        // Add transaction details to the result div
+                        const txnDetails = document.createElement('p');
+                        txnDetails.className = 'text-sm text-gray-600 mb-4';
+                        txnDetails.textContent = `Transaction ID: ${data.txnId}`;
+                        
+                        // Remove any existing transaction details first
+                        const existingDetails = resultDiv.querySelector('p:last-child:not(:first-child)');
+                        if (existingDetails) {
+                            resultDiv.removeChild(existingDetails);
+                        }
+                        
+                        // Insert txnDetails after the first paragraph but before the action buttons
+                        resultDiv.insertBefore(txnDetails, document.getElementById('linkActionButtons'));
+                        
+                        // Show success toast
+                        showToast('Authentication link generated successfully', 'success');
+                    } else {
+                        throw new Error('No authentication URL returned from the server');
+                    }
+                } catch (dataError) {
+                    console.error('Original dataError caught within link generation:', dataError);
+                    throw new Error('Invalid response format from server');
+                }
+                
+            } catch (error) {
+                // Stop showing placeholder on error
+                // handleDevModeError(error, null, errorDiv, devExplanationDiv);
+                
+                // Just display the actual error
+                errorDiv.textContent = error.message || 'Failed to generate authentication link.';
+                errorDiv.style.display = 'block';
+                resultDiv.style.display = 'none'; // Hide the result area
+                devExplanationDiv.style.display = 'none'; // Hide dev explanation
+                document.getElementById('linkPerformance').style.display = 'none'; // Hide performance
+                
+                showToast('Failed to generate link: ' + (error.message || 'Unknown error'), 'error');
+                
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Generate Authentication Link';
+            }
+        });
+
+        // Copy link button handler
+        document.getElementById('copyLinkBtn').addEventListener('click', function() {
+            const linkText = document.getElementById('authLink').href;
+            copyToClipboard(linkText);
+        });
+
+        // Download QR code button handler
+        document.getElementById('downloadQrBtn').addEventListener('click', downloadQRCode);
+        
+        // Store the start time for the entire authentication flow
+        if (!sessionStorage.getItem('authFlowStartTime')) {
+            sessionStorage.setItem('authFlowStartTime', performance.now());
+        }
+    </script>
+</body>
+</html> 

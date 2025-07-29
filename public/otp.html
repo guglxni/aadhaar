@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter OTP for Aadhaar Verification</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: hsl(0 0% 98%);
+            color: hsl(240 10% 3.9%);
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid hsl(240 5.9% 90%);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-icon {
+            background-color: hsl(142.1 76.2% 36.3% / 0.1);
+            color: hsl(142.1 76.2% 36.3%);
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        h1 {
+            color: hsl(222.2 47.4% 11.2%);
+            margin-top: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: hsl(240 10% 3.9%);
+        }
+        
+        .otp-input-container {
+            position: relative;
+        }
+        
+        .otp-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 150ms, box-shadow 150ms;
+            letter-spacing: 0.25rem;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.25rem;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: hsl(221.2 83.2% 53.3%);
+            box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+        }
+        
+        .otp-input.shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: hsl(240 3.8% 46.1%);
+            font-size: 1rem;
+        }
+        
+        .toggle-password:hover {
+            color: hsl(240 5.9% 10%);
+        }
+        
+        .submit-btn {
+            background-color: hsl(222.2 47.4% 11.2%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 150ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .submit-btn:hover {
+            background-color: hsl(217.2 32.6% 17.5%);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .uid-display {
+            background-color: hsl(210 40% 96.1%);
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .uid-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .uid-icon {
+            background-color: hsl(221.2 83.2% 53.3% / 0.1);
+            color: hsl(221.2 83.2% 53.3%);
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .error {
+            color: hsl(0 84.2% 60.2%);
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .input-error-msg {
+            color: hsl(0 84.2% 60.2%);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .countdown {
+            font-size: 0.875rem;
+            color: hsl(240 3.8% 46.1%);
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .spinner {
+            display: inline-block;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .progress-container {
+            background-color: hsl(240 5.9% 90%);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: hsl(142.1 76.2% 36.3%);
+            transition: width 1s linear;
+        }
+        
+        .steps {
+            display: flex;
+            margin-bottom: 2rem;
+            justify-content: space-between;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: "";
+            position: absolute;
+            top: 0.875rem;
+            left: 60%;
+            width: 80%;
+            height: 2px;
+            background-color: hsl(240 5.9% 90%);
+        }
+        
+        .step.complete:not(:last-child):after {
+            background-color: hsl(142.1 76.2% 36.3%);
+        }
+        
+        .step-circle {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background-color: hsl(240 5.9% 90%);
+            color: hsl(240 5.9% 10%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .step.active .step-circle {
+            background-color: hsl(221.2 83.2% 53.3%);
+            color: white;
+        }
+        
+        .step.complete .step-circle {
+            background-color: hsl(142.1 76.2% 36.3%);
+            color: white;
+        }
+        
+        .step-text {
+            font-size: 0.75rem;
+            color: hsl(240 3.8% 46.1%);
+        }
+        
+        .step.active .step-text {
+            color: hsl(240 5.9% 10%);
+            font-weight: 500;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(100%);
+            max-width: 350px;
+            align-items: center;
+            border-left: 4px solid;
+        }
+        
+        .toast-error {
+            border-left-color: hsl(0 84.2% 60.2%);
+        }
+        
+        .toast-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        
+        .toast-message {
+            flex: 1;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: hsl(240 3.8% 46.1%);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .performance-metric {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: hsl(240 3.8% 46.1%);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fa-solid fa-mobile-screen"></i>
+            </div>
+            <h1>Enter OTP for Aadhaar Verification</h1>
+        </div>
+        
+        <div class="steps">
+            <div class="step complete">
+                <div class="step-circle">1</div>
+                <div class="step-text">Enter UID</div>
+            </div>
+            <div class="step complete">
+                <div class="step-circle">2</div>
+                <div class="step-text">Generate</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle">3</div>
+                <div class="step-text">Enter OTP</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <div class="step-text">Verify</div>
+            </div>
+        </div>
+        
+        <div class="uid-display">
+            <div class="uid-info">
+                <div class="uid-icon">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-500">Aadhaar</div>
+                    <div class="font-medium" id="maskedUid"></div>
+                </div>
+            </div>
+            <div>
+                <div class="countdown" id="countdown">
+                    OTP expires in <span id="timer">3:00</span>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <form id="otpForm" action="/auth/verify" method="POST">
+            <input type="hidden" id="uid" name="uid" value="">
+            <input type="hidden" id="state" name="state" value="">
+            <input type="hidden" id="csrfToken" name="csrfToken" value="">
+            <input type="hidden" id="txn" name="txn" value="">
+            
+            <div class="form-group">
+                <label for="otp">Enter the 6-digit OTP sent to your registered mobile:</label>
+                <div class="otp-input-container">
+                    <input type="text" id="otp" name="otp" placeholder="• • • • • •" maxlength="6" required
+                           class="otp-input" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]*">
+                    <button type="button" id="toggleOtp" class="toggle-password" aria-label="Toggle OTP visibility">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                <div id="otpError" class="input-error-msg">Invalid OTP format. Please enter 6 digits.</div>
+            </div>
+            
+            <button type="submit" id="submitBtn" class="submit-btn">Verify OTP</button>
+        </form>
+        
+        <div id="performance" class="performance-metric"></div>
+        <div id="error" class="error text-center mt-4"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        // Toast management
+        function showToast(message, type = 'error', duration = 5000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let icon = '';
+            if (type === 'error') {
+                icon = '<i class="fa-solid fa-exclamation-circle toast-icon text-red-600"></i>';
+            }
+            
+            toast.innerHTML = `
+                ${icon}
+                <div class="toast-message">${message}</div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger reflow to enable the animation
+            void toast.offsetWidth;
+            
+            // Show the toast
+            toast.classList.add('show');
+            
+            // Close button functionality
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            });
+            
+            // Auto close after duration
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (container.contains(toast)) {
+                            container.removeChild(toast);
+                        }
+                    }, 300);
+                }
+            }, duration);
+        }
+        
+        // Function to get URL parameters
+        function getUrlParams() {
+            const params = {};
+            new URLSearchParams(window.location.search).forEach((value, key) => {
+                params[key] = value;
+            });
+            return params;
+        }
+        
+        // Function to mask UID (show only last 4 digits)
+        function maskUid(uid) {
+            if (uid && uid.length >= 4) {
+                return 'XXXX-XXXX-' + uid.slice(-4);
+            }
+            return 'XXXX-XXXX-XXXX';
+        }
+        
+        // Function to start countdown timer
+        function startCountdown() {
+            let totalTime = 180; // 3 minutes in seconds
+            const timerElement = document.getElementById('timer');
+            const progressBar = document.getElementById('progress-bar');
+            
+            function updateTimer() {
+                const minutes = Math.floor(totalTime / 60);
+                const seconds = totalTime % 60;
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update progress bar
+                const percentRemaining = (totalTime / 180) * 100;
+                progressBar.style.width = `${percentRemaining}%`;
+                
+                // Change color to yellow when less than 1 minute
+                if (totalTime < 60) {
+                    progressBar.style.backgroundColor = '#f59e0b';
+                }
+                
+                // Change color to red when less than 30 seconds
+                if (totalTime < 30) {
+                    progressBar.style.backgroundColor = '#ef4444';
+                }
+                
+                totalTime--;
+                
+                if (totalTime < 0) {
+                    clearInterval(timerInterval);
+                    timerElement.textContent = 'Expired';
+                    showToast('OTP has expired. Please request a new one.', 'error');
+                    document.getElementById('submitBtn').disabled = true;
+                    document.getElementById('otp').disabled = true;
+                }
+            }
+            
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
+            return timerInterval;
+        }
+        
+        // Function to toggle OTP visibility
+        function setupOtpToggle() {
+            const otpInput = document.getElementById('otp');
+            const toggleBtn = document.getElementById('toggleOtp');
+            const icon = toggleBtn.querySelector('i');
+            
+            toggleBtn.addEventListener('click', () => {
+                if (otpInput.type === 'text') {
+                    otpInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    otpInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+        
+        // Function to validate OTP input
+        function validateOtp(otp) {
+            return /^\d{6}$/.test(otp);
+        }
+        
+        // OTP Input shake animation and error
+        function shakeOtpInput() {
+            const otpInput = document.getElementById('otp');
+            const errorMsg = document.getElementById('otpError');
+            
+            otpInput.classList.add('shake');
+            errorMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                otpInput.classList.remove('shake');
+            }, 500);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters
+            const params = getUrlParams();
+            
+            // Set values in the form
+            document.getElementById('uid').value = params.uid || '';
+            document.getElementById('state').value = params.state || '';
+            document.getElementById('csrfToken').value = params.csrf_token || '';
+            document.getElementById('txn').value = params.txn || '';
+            
+            // Display masked UID
+            document.getElementById('maskedUid').textContent = maskUid(params.uid);
+            
+            // If there's an error parameter, display it
+            if (params.error) {
+                document.getElementById('error').textContent = params.error;
+                shakeOtpInput();
+                showToast(params.error, 'error');
+            }
+            
+            // Start countdown timer
+            const timerInterval = startCountdown();
+            
+            // Setup OTP toggle visibility
+            setupOtpToggle();
+            
+            // Autofocus on OTP input
+            const otpInput = document.getElementById('otp');
+            otpInput.focus();
+            
+            // Initially set OTP input type to password
+            otpInput.type = 'password';
+            
+            // OTP input validation
+            otpInput.addEventListener('input', function(e) {
+                // Remove non-numeric characters
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // Hide error when user starts typing again
+                document.getElementById('otpError').style.display = 'none';
+            });
+            
+            // Form submission handler
+            document.getElementById('otpForm').addEventListener('submit', async function(e) {
+                e.preventDefault(); // <-- Prevent default browser submission
+                
+                const otpInput = document.getElementById('otp');
+                const otp = otpInput.value;
+                const errorDiv = document.getElementById('error');
+                errorDiv.textContent = ''; // Clear previous errors
+                
+                // Validate OTP
+                if (!validateOtp(otp)) {
+                    shakeOtpInput();
+                    return; // Stop if invalid
+                }
+                
+                // Disable button and show spinner
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+                
+                // Update wizard steps (optional, but good UX)
+                // document.querySelector('.step.active')?.classList.remove('active');
+                // document.querySelector('.step:nth-child(4)')?.classList.add('active');
+                
+                // Record submission time (optional)
+                // sessionStorage.setItem('otpSubmitTime', performance.now());
+                
+                // Get form data
+                const formData = new FormData(this); // 'this' refers to the form element
+                const csrfTokenValue = formData.get('csrfToken');
+                
+                console.log('Submitting CSRF token via fetch:', csrfTokenValue);
+                console.log('Submitting State:', formData.get('state'));
+                console.log('Submitting Txn:', formData.get('txn'));
+                console.log('Submitting UID:', formData.get('uid'));
+                console.log('Submitting OTP:', formData.get('otp'));
+
+                // --- Construct JSON payload --- 
+                const payload = {};
+                formData.forEach((value, key) => { payload[key] = value; });
+                // -----------------------------
+
+                try {
+                    const response = await fetch('/auth/verify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    // Check if response indicates success (e.g., redirect or specific status)
+                    // If the backend redirects on success, the browser handles it automatically
+                    // unless response.redirected is false.
+                    // If it returns JSON on success, we handle it here.
+                    if (response.ok) {
+                         // If backend sends JSON token directly (unlikely based on controller code)
+                         try {
+                            const result = await response.json(); 
+                            // Redirect manually if JSON is returned
+                            window.location.href = `/token-viewer.html?token=${encodeURIComponent(result.token)}&uid=${encodeURIComponent(result.uid)}`;
+                         } catch(jsonError) {
+                            // This likely means the backend successfully redirected us, 
+                            // or sent non-JSON. The browser should handle the redirect.
+                            // If the redirect doesn't happen automatically, check response headers.
+                            console.log('Response OK, but not JSON. Assuming redirect occurred or will occur.');
+                            if(response.redirected) {
+                                window.location.href = response.url;
+                            } else {
+                                // If no redirect happened, maybe it's the token page? Need to check specific backend logic.
+                                // For now, let's assume success means redirect happened.
+                                console.log('Response OK, redirect expected.');
+                            }
+                         }
+                    } else {
+                        // Handle specific errors returned by the backend
+                        const errorData = await response.json();
+                        const errorMessage = errorData.message || `Error: ${response.status}`;
+                        console.error('Verification failed:', errorData);
+                        errorDiv.textContent = errorMessage;
+                        showToast(errorMessage, 'error');
+                    }
+                } catch (networkError) {
+                    console.error('Network error during verification:', networkError);
+                    errorDiv.textContent = 'Network error. Please try again.';
+                    showToast('Network error. Please try again.', 'error');
+                } finally {
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Verify OTP';
+                }
+            });
+            
+            // Record page load time for performance metrics
+            sessionStorage.setItem('otpPageLoadTime', performance.now());
+            
+            // Get auth flow start time from session and show elapsed time
+            const authFlowStartTime = parseInt(sessionStorage.getItem('authFlowStartTime') || '0');
+            if (authFlowStartTime) {
+                const elapsedTime = ((performance.now() - authFlowStartTime) / 1000).toFixed(2);
+                document.getElementById('performance').textContent = `Time elapsed: ${elapsedTime}s`;
+            }
+        });
+    </script>
+</body>
+</html> 

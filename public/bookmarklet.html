@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Token Beautifier - Bookmarklet</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2563eb;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .bookmarklet {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .bookmarklet:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .instructions {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            border-radius: 4px;
+        }
+        
+        .demo {
+            margin-top: 30px;
+        }
+        
+        .demo-before, .demo-after {
+            margin-bottom: 20px;
+        }
+        
+        .demo-image {
+            max-width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        
+        .demo-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>JWT Token Beautifier</h1>
+        <p>Transform raw JWT tokens into a beautiful, readable format</p>
+    </div>
+    
+    <div class="card">
+        <h2>Drag this to your bookmarks bar:</h2>
+        
+        <div style="text-align: center;">
+            <a class="bookmarklet" href="javascript:(function(){var s=document.createElement('script');s.src='http://localhost:3002/token-interceptor.js?v='+Math.random();document.body.appendChild(s);})();">
+                Beautify JWT Token
+            </a>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ol>
+                <li>Drag the button above to your bookmarks bar</li>
+                <li>Navigate to a page that displays a raw JWT token (like <a href="/auth/verify">auth/verify</a>)</li>
+                <li>Click the bookmarklet in your bookmarks bar</li>
+                <li>The raw token will be transformed into a beautiful, readable format!</li>
+            </ol>
+        </div>
+        
+        <div class="note">
+            <strong>Note:</strong> This bookmarklet works on any page that displays a raw JWT token. It automatically detects if the page contains only a JWT token and transforms it.
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Auto-Beautify Method</h2>
+        <p>To automatically beautify JWT tokens when viewing them in your browser, add this script tag to the end of your HTML document:</p>
+        
+        <pre><code>&lt;script src="http://localhost:3002/token-interceptor.js"&gt;&lt;/script&gt;</code></pre>
+        
+        <p>Or, for a production environment with a different domain:</p>
+        
+        <pre><code>&lt;script src="https://yourdomain.com/token-interceptor.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+    
+    <script src="/token-interceptor.js"></script>
+</body>
+</html> 

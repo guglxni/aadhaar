@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-07-29T16:40:55.003Z",
+  "err": "999",
+  "actn": "",
+  "severity": "error",
+  "classification": "unknown",
+  "retry_enabled": false,
+  "next_action": "Contact UIDAI support",
+  "last_test": "2025-07-29T16:40:54.993Z"
+}

@@ -1,0 +1,37 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Test on relevant Node.js versions
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Install dependencies
+      # Use --legacy-peer-deps based on previous local install success
+      run: npm install --legacy-peer-deps
+    - name: Lint code
+      # Use the correct ESLint config file name
+      run: npm run lint -- --config eslint.config.mjs
+    - name: Run tests
+      run: npm run test
+    - name: Run tests with coverage
+      run: npm run test:cov
+    - name: Run e2e tests
+      run: npm run test:e2e
+    - name: Build project
+      run: npm run build

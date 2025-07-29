@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Prevent duplicate status files
+if git diff --cached --name-only | grep -E '^[^/]*STATUS.*\.md$' | grep -v '^STATUS\.md$'; then
+  echo "❌ ERROR: Found duplicate status file! Only STATUS.md is allowed at repo root."
+  echo "Use the automated status generator: npm run status:generate"
+  exit 1
+fi
+
+echo "✅ Pre-commit status check passed" 

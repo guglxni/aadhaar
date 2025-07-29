@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Authentication - Verify OTP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: hsl(240 10% 3.9%);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: hsl(0 0% 100%);
+        }
+        
+        .card {
+            border-radius: 0.5rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            background-color: hsl(0 0% 100%);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(240 5.9% 90%);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: hsl(221.2 83.2% 53.3%);
+            box-shadow: 0 0 0 1px hsl(221.2 83.2% 53.3%);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition-property: color, background-color, border-color;
+            transition-duration: 150ms;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary {
+            background-color: hsl(222.2 47.4% 11.2%);
+            color: hsl(210 40% 98%);
+        }
+        
+        .btn-primary:hover {
+            background-color: hsl(217.2 32.6% 17.5%);
+        }
+        
+        .section-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: hsl(240 5.9% 10%);
+        }
+        
+        #verification-form, #result-section {
+            margin-top: 1.5rem;
+        }
+        
+        #result-section {
+            display: none;
+        }
+        
+        .spinner {
+            display: inline-block;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        #loading {
+            display: none;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: hsl(142.1 76.2% 36.3% / 0.1);
+            color: hsl(142.1 76.2% 36.3%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .data-row {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid hsl(240 5.9% 90%);
+        }
+        
+        .data-row:last-child {
+            border-bottom: none;
+        }
+        
+        .data-label {
+            flex: 1;
+            font-weight: 500;
+            color: hsl(240 3.8% 46.1%);
+        }
+        
+        .data-value {
+            flex: 2;
+            font-weight: 500;
+        }
+        
+        .token-container {
+            background-color: hsl(210 40% 96.1%);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .token-text {
+            font-family: monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: hsl(240 5.9% 26%);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: white;
+            border: 1px solid hsl(240 5.9% 90%);
+            border-radius: 0.25rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: hsl(240 3.8% 46.1%);
+            transition: background-color 0.15s, color 0.15s;
+        }
+        
+        .copy-btn:hover {
+            background-color: hsl(210 40% 96.1%);
+            color: hsl(222.2 47.4% 11.2%);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(100%);
+            max-width: 350px;
+            align-items: center;
+            border-left: 4px solid hsl(142.1 76.2% 36.3%);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+            color: hsl(142.1 76.2% 36.3%);
+        }
+        
+        .error-container {
+            background-color: hsl(0 100% 97%);
+            border-left: 4px solid hsl(0 84.2% 60.2%);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.375rem;
+            color: hsl(0 40% 30%);
+        }
+    </style>
+</head>
+<body>
+    <div class="card mt-8">
+        <div class="text-center">
+            <h1 class="text-2xl font-bold mb-2">Aadhaar Verification</h1>
+            <p class="text-gray-600">Verify your Aadhaar identity using OTP</p>
+        </div>
+        
+        <form id="verification-form" class="mt-6">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fa-solid fa-circle-info text-blue-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">This form allows you to directly verify an OTP for an existing authentication session.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="uid" class="input-label">Aadhaar UID (12 digits):</label>
+                <input type="text" id="uid" class="input-field" placeholder="999941057058" maxlength="12" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="state" class="input-label">State ID:</label>
+                <input type="text" id="state" class="input-field" placeholder="UUID format (e.g., f01acd41-9351-42d2-a2a7-34c658ad8d61)" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="csrf_token" class="input-label">CSRF Token:</label>
+                <input type="text" id="csrf_token" class="input-field" placeholder="Hex format (e.g., a1b2c3d4e5f6...)" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="otp" class="input-label">OTP (6 digits):</label>
+                <input type="text" id="otp" class="input-field" placeholder="123456" maxlength="6" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="txn" class="input-label">Transaction ID:</label>
+                <input type="text" id="txn" class="input-field" placeholder="UUID format (e.g., 4c67d9df-4dcc-4c45-bd91-1b06658613d5)" required>
+            </div>
+            
+            <button type="submit" id="submit-btn" class="btn btn-primary w-full mt-4">
+                Verify OTP
+            </button>
+            
+            <div id="loading" class="mt-4 text-center text-gray-600">
+                <span class="spinner"></span> Verifying OTP...
+            </div>
+            
+            <div id="error-message" class="error-container" style="display: none;"></div>
+        </form>
+        
+        <div id="result-section">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            
+            <h2 class="text-xl font-bold text-center mb-2">Authentication Successful</h2>
+            <p class="text-center text-gray-600 mb-6">Your Aadhaar identity has been verified successfully</p>
+            
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fa-solid fa-circle-info text-green-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">Your authentication token has been generated. This token can be used to access secure services.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="section-header">Authentication Details</h3>
+                <div class="border rounded-md overflow-hidden">
+                    <div class="data-row bg-gray-50">
+                        <div class="data-label px-4">Aadhaar UID</div>
+                        <div class="data-value px-4" id="result-uid">Loading...</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label px-4">Authentication Time</div>
+                        <div class="data-value px-4" id="result-auth-time">Loading...</div>
+                    </div>
+                    <div class="data-row bg-gray-50">
+                        <div class="data-label px-4">Transaction ID</div>
+                        <div class="data-value px-4" id="result-txn">Loading...</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label px-4">Token Expiry</div>
+                        <div class="data-value px-4" id="result-expiry">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="section-header">Authentication Token</h3>
+                <p class="text-sm text-gray-600 mb-3">This token verifies your Aadhaar authentication. It may be required by some applications.</p>
+                <div class="token-container">
+                    <pre class="token-text" id="result-token">Loading token data...</pre>
+                    <button class="copy-btn" id="copy-token-btn" title="Copy token">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex mt-6">
+                <button id="new-verification-btn" class="btn btn-primary w-full">
+                    <i class="fa-solid fa-rotate mr-2"></i> New Verification
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-check-circle toast-icon"></i>
+        <div>Token copied to clipboard</div>
+    </div>
+    
+    <script>
+        // Parse JWT token
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error('Error parsing JWT:', e);
+                return null;
+            }
+        }
+        
+        // Format date from timestamp
+        function formatDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString();
+        }
+        
+        // Show toast notification
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Copy token to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        
+        // Handle form submission
+        document.getElementById('verification-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const state = document.getElementById('state').value;
+            const csrf_token = document.getElementById('csrf_token').value;
+            const otp = document.getElementById('otp').value;
+            const txn = document.getElementById('txn').value;
+            const uid = document.getElementById('uid').value;
+            
+            // Basic validation
+            if (!state || !csrf_token || !otp || !txn || !uid) {
+                showError('All fields are required');
+                return;
+            }
+            
+            // Show loading state
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('error-message').style.display = 'none';
+            
+            try {
+                // Make API request
+                const response = await fetch('/auth/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        state,
+                        csrf_token,
+                        otp,
+                        txn,
+                        uid
+                    }),
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Verification failed');
+                }
+                
+                const data = await response.json();
+                
+                // Display the result
+                displayResult(data);
+                
+            } catch (error) {
+                showError(error.message || 'Failed to verify OTP');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submit-btn').disabled = false;
+            }
+        });
+        
+        // Display error message
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Display the verification result
+        function displayResult(data) {
+            // Hide form
+            document.getElementById('verification-form').style.display = 'none';
+            
+            // Show result section
+            const resultSection = document.getElementById('result-section');
+            resultSection.style.display = 'block';
+            
+            // Display token
+            const tokenElement = document.getElementById('result-token');
+            tokenElement.textContent = data.token;
+            
+            // Parse and display token data
+            const payload = parseJwt(data.token);
+            if (payload) {
+                // Display UID
+                document.getElementById('result-uid').textContent = data.uid || payload.sub || 'Not available';
+                
+                // Display auth time
+                if (payload.auth_time || payload.iat) {
+                    document.getElementById('result-auth-time').textContent = formatDate(payload.auth_time || payload.iat);
+                } else {
+                    document.getElementById('result-auth-time').textContent = 'Not available';
+                }
+                
+                // Display transaction ID
+                document.getElementById('result-txn').textContent = payload.txn || payload.aadhaarTxn || payload.uidaiTxn || 'Not available';
+                
+                // Display expiry
+                if (payload.exp) {
+                    document.getElementById('result-expiry').textContent = formatDate(payload.exp);
+                } else {
+                    document.getElementById('result-expiry').textContent = 'Not available';
+                }
+            } else {
+                document.getElementById('result-uid').textContent = data.uid || 'Not available';
+                document.getElementById('result-auth-time').textContent = 'Could not parse token';
+                document.getElementById('result-txn').textContent = 'Could not parse token';
+                document.getElementById('result-expiry').textContent = 'Could not parse token';
+            }
+            
+            // Set up copy button
+            document.getElementById('copy-token-btn').addEventListener('click', () => {
+                copyToClipboard(data.token);
+            });
+            
+            // Set up reset button
+            document.getElementById('new-verification-btn').addEventListener('click', resetForm);
+        }
+        
+        // Reset the form and show it again
+        function resetForm() {
+            // Hide result section
+            document.getElementById('result-section').style.display = 'none';
+            
+            // Show form
+            document.getElementById('verification-form').style.display = 'block';
+            
+            // Reset form fields
+            document.getElementById('verification-form').reset();
+        }
+        
+        // If URL has query params like ?token=xxx, display it like a result
+        function checkForQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            const uid = params.get('uid');
+            
+            if (token) {
+                displayResult({ token, uid });
+            }
+        }
+        
+        // Check for query params when the page loads
+        window.addEventListener('DOMContentLoaded', checkForQueryParams);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,13 @@
+
+> aadhaar-verification-server@0.0.1 start:dev
+> cross-env NODE_ENV=development nest start --watch
+
+[2J[3J[H[[90m9:02:50 AM[0m] Starting compilation in watch mode...
+
+[96msrc/modules/auth/auth.controller.ts[0m:[93m464[0m:[93m49[0m - [91merror[0m[90m TS2339: [0mProperty 'retrieveUserData' does not exist on type 'AadhaarProvider'.
+
+[7m464[0m       const result = await this.aadhaarProvider.retrieveUserData({
+[7m   [0m [91m                                                ~~~~~~~~~~~~~~~~[0m
+
+[[90m9:02:51 AM[0m] Found 1 error. Watching for file changes.
+

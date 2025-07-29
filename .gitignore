@@ -1,0 +1,26 @@
+# SpecStory explanation file
+.specstory/.what-is-this.md
+
+# Extracted PEM files for xmlsec1 (security sensitive)
+certs/aua_private.pem
+certs/aua_cert.pem
+
+# Node modules and build artifacts
+node_modules/
+dist/
+build/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Debug files
+debug-signed-xml.xml

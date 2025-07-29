@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .qr-container {
+            width: 250px;
+            height: 250px;
+            border: 2px solid #ddd;
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generation Test</h1>
+        
+        <button onclick="testExternalQR()">Test External QR Service</button>
+        <button onclick="testClientSideQR()">Test Client-Side QR</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <div id="qrContainer" class="qr-container">
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
+                Click a button to generate QR code
+            </div>
+        </div>
+        
+        <div id="log" class="log"></div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function testExternalQR() {
+            log('Testing external QR service...');
+            const testUrl = 'http://localhost:3002/auth/verify/test123';
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(testUrl)}`;
+            
+            log(`Generated QR URL: ${qrUrl}`);
+            
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = `
+                <img src="${qrUrl}" 
+                     alt="QR Code Test" 
+                     style="width: 100%; height: 100%; object-fit: contain;"
+                     onload="log('✅ External QR image loaded successfully!')" 
+                     onerror="log('❌ External QR image failed to load')">
+            `;
+        }
+
+        function testClientSideQR() {
+            log('Testing client-side QR generation...');
+            
+            if (typeof QRious === 'undefined') {
+                log('❌ QRious library not available');
+                return;
+            }
+            
+            log('✅ QRious library is available');
+            
+            const testUrl = 'http://localhost:3002/auth/verify/test123';
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '<canvas id="qrCanvas" style="width: 100%; height: 100%;"></canvas>';
+            
+            const canvas = document.getElementById('qrCanvas');
+            
+            try {
+                const qr = new QRious({
+                    element: canvas,
+                    value: testUrl,
+                    size: 200,
+                    foreground: '#000000',
+                    background: '#FFFFFF'
+                });
+                log('✅ Client-side QR generation successful!');
+            } catch (error) {
+                    log(`❌ Client-side QR generation failed: ${error.message}`);
+                }
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Test on page load
+        window.addEventListener('load', function() {
+            log('QR Test page loaded');
+            log(`QRious library available: ${typeof QRious !== 'undefined'}`);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Auth Callback</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#007bff">
+    <!-- Include jwt-decode library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+</head>
+<body>
+    <nav aria-label="Main navigation">
+        <button class="fab" id="fabHome" aria-label="Home" title="Home" style="display:none;">🏠</button>
+    </nav>
+    <div class="logo-bar" style="display:flex;justify-content:center;align-items:center;gap:2em;margin-top:1.5em;">
+        <img src="/public/Unknown-1.png" alt="Aadhaar UIDAI Logo" style="height:64px;max-width:160px;object-fit:contain;"/>
+        <img src="/public/hopae.png" alt="Hopae Logo" style="height:48px;max-width:120px;object-fit:contain;"/>
+    </div>
+    <main>
+    <h1>Authentication Result</h1>
+    <div class="container" aria-label="Authentication Result Container">
+        <div id="statusBadge" class="badge" style="display: none;" role="status"></div>
+        <div id="result"></div>
+        <div class="buttons">
+            <button id="copyTokenBtn" style="display: none; margin-top: 1em;" aria-label="Copy ID Token">Copy ID Token</button>
+            <button id="retryBtn" style="display: none; margin-top: 1em;" aria-label="Try Again">Try Again</button>
+            <button id="backHomeBtn" type="button" style="display:none;" aria-label="Back to Home">Back to Home</button>
+        </div>
+    </div>
+    </main>
+    <footer style="text-align:center; margin-top:2em; color:#888; font-size:0.95em;">
+        &copy; 2025 Aadhaar Auth Demo
+    </footer>
+    <script>
+        const resultDiv = document.getElementById('result');
+        const statusBadge = document.getElementById('statusBadge');
+        const copyTokenBtn = document.getElementById('copyTokenBtn');
+        const retryBtn = document.getElementById('retryBtn');
+        const backHomeBtn = document.getElementById('backHomeBtn');
+        const fabHome = document.getElementById('fabHome');
+        const params = new URLSearchParams(window.location.search);
+        const idToken = params.get('idToken');
+        const error = params.get('error');
+        const errorDescription = params.get('error_description');
+        function showSuccessBanner(message) {
+            return `<div class=\"success-banner\" role=\"status\"><span class=\"icon\" aria-hidden=\"true\">✔️</span>${message}</div>`;
+        }
+        function showErrorBanner(message) {
+            return `<div class=\"error animated\" role=\"alert\"><span style=\"font-size:1.3em;vertical-align:middle;\">❌</span> ${message}</div>`;
+        }
+        if (idToken) {
+            try {
+                const decodedPayload = jwt_decode(idToken);
+                statusBadge.textContent = 'Verification Successful';
+                statusBadge.className = 'badge success';
+                statusBadge.style.display = 'block';
+                resultDiv.innerHTML =
+                    showSuccessBanner('Authentication successful!') +
+                    `<p><strong>ID Token Received:</strong></p>
+                    <pre id=\"idTokenValue\" class=\"token\">${idToken}</pre>
+                    <p><strong>Decoded Payload:</strong></p>
+                    <pre class=\"payload\">${JSON.stringify(decodedPayload, null, 2)}</pre>`;
+                copyTokenBtn.style.display = 'block';
+                retryBtn.style.display = 'none';
+                backHomeBtn.style.display = 'inline-block';
+                fabHome.style.display = 'flex';
+            } catch (e) {
+                console.error('Error decoding ID token:', e);
+                resultDiv.innerHTML =
+                    showErrorBanner('Failed to decode the received ID token.') +
+                    `<h2>Error Decoding Token</h2>
+                    <p><strong>Raw Token:</strong></p>
+                    <pre class=\"token\">${idToken}</pre>`;
+                statusBadge.textContent = 'Error Decoding Token';
+                statusBadge.className = 'badge error';
+                statusBadge.style.display = 'block';
+                retryBtn.style.display = 'block';
+                fabHome.style.display = 'flex';
+            }
+        } else if (error) {
+            resultDiv.innerHTML =
+                showErrorBanner('Authentication failed.') +
+                `<h2>Authentication Failed</h2>
+                <p class=\"error animated\" role=\"alert\"><strong>Error:</strong> ${error}</p>
+                <p class=\"error animated\" role=\"alert\"><strong>Details:</strong> ${errorDescription || 'No additional details provided.'}</p>`;
+            statusBadge.textContent = 'Verification Failed';
+            statusBadge.className = 'badge error';
+            statusBadge.style.display = 'block';
+            retryBtn.style.display = 'block';
+            fabHome.style.display = 'flex';
+        } else {
+            resultDiv.innerHTML = '<p>No authentication data received in the URL.</p>';
+            backHomeBtn.style.display = 'inline-block';
+            fabHome.style.display = 'flex';
+        }
+        copyTokenBtn.addEventListener('click', () => {
+            const tokenText = document.getElementById('idTokenValue').textContent;
+            navigator.clipboard.writeText(tokenText).then(() => {
+                copyTokenBtn.textContent = 'Copied!';
+                setTimeout(() => { copyTokenBtn.textContent = 'Copy ID Token'; }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy token: ', err);
+                alert('Failed to copy token.');
+            });
+        });
+        retryBtn.addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+        backHomeBtn.addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+        fabHome.addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+        fabHome.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                window.location.href = '/index.html';
+            }
+        });
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                fabHome.style.display = 'flex';
+            } else {
+                fabHome.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+
+> aadhaar-verification-server@0.0.1 start:dev
+> cross-env NODE_ENV=development nest start --watch
+
+[2J[3J[H[[90m5:02:44 AM[0m] Starting compilation in watch mode...
+
+[[90m5:02:45 AM[0m] Found 0 errors. Watching for file changes.
+
+(node:93283) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m--- Starting Application Bootstrap ---[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCommonModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHealthModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m
+{"timestamp":"2025-07-17T23:32:45.836Z","level":"log","message":"PROVIDER_INITIALIZATION_START","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{}}
+{"timestamp":"2025-07-17T23:32:45.836Z","level":"log","message":"PROVIDER_INITIALIZATION_CONFIG","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"isDevelopment":true,"auaCode":"public","uidaiBaseUrl":"https://developer.uidai.gov.in","licenseKey":"MG_g7jJVYU..."}}
+{"timestamp":"2025-07-17T23:32:45.836Z","level":"log","message":"LOADING_KEYS_START","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"hasP12Path":true,"hasPemPaths":true}}
+{"timestamp":"2025-07-17T23:32:45.836Z","level":"log","message":"LOADING_P12_CERTIFICATE","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+{"timestamp":"2025-07-17T23:32:45.876Z","level":"log","message":"P12_CERTIFICATE_LOADED_SUCCESSFULLY","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"hasPrivateKey":true,"hasCertificate":true,"alias":"publicauaforstagingservices"}}
+{"timestamp":"2025-07-17T23:32:45.876Z","level":"log","message":"KEYS_LOADED_SUCCESSFULLY","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"method":"P12"}}
+{"timestamp":"2025-07-17T23:32:45.876Z","level":"log","message":"PROVIDER_INITIALIZATION_SUCCESS","context":"AuditLogger","correlationId":"f162fc92-043f-4a13-a174-00106009fa5d","payload":{"loadedKeys":true}}
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mNestFactory created application instance.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mRunning in Development mode.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mHelmet security middleware configured.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mBodyParser middleware configured.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mCORS middleware configured.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mGlobal ValidationPipe configured.[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mServing static files from: /Users/aaryanguglani/Desktop/projcects/aadhaar/public[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mAttempting to listen on 0.0.0.0:3002[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[CrossDeviceGateway] [39m[32m🔌 Cross-Device WebSocket Gateway initialized[39m
+{"timestamp":"2025-07-17T23:32:45.990Z","level":"log","message":"CROSS_DEVICE_WEBSOCKET_INITIALIZED","context":"AuditLogger","correlationId":"system","payload":{"timestamp":"2025-07-17T23:32:45.990Z"}}
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mCrossDeviceGateway subscribed to the "join_session" message[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mCrossDeviceGateway subscribed to the "get_session_status" message[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/qr, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/callback, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify/:sessionId, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId/status, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId/complete, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/create, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/config/validate, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/connection, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/certificates, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/load, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/data/retrieve, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mCrossDeviceController {/auth/cross-device}:[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/initiate, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/authenticate/:sessionId, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/authenticate, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/session/create, POST} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/session/:sessionId/status, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/sessions/active, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m✅✅✅ SERVER IS LISTENING! ✅✅✅[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m🚀 Application is running on: http://127.0.0.1:3002[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:45 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m--- Bootstrap successful ---[39m
+{"timestamp":"2025-07-17T23:32:55.658Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"uid":"999999990019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:32:55.659Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"uid":"********0019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:32:55.659Z","level":"log","message":"CONSTRUCTED_OTP_API_URL","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"otpApiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MG_g7jJVYUIW7cLYXY5yaqKD6D1TuhjTJTDPHcb0SudOhVpvpnsEw_A"}}
+{"timestamp":"2025-07-17T23:32:55.659Z","level":"log","message":"USING_P12_FOR_OTP_SIGNING","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:55 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+[32m[Nest] 93291  - [39m07/18/2025, 5:02:55 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mXML signed successfully with P12-extracted certificate[39m
+{"timestamp":"2025-07-17T23:32:55.715Z","level":"log","message":"SENDING_REQUEST_TO_UIDAI","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"apiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MG_g7jJVYUIW7cLYXY5yaqKD6D1TuhjTJTDPHcb0SudOhVpvpnsEw_A","requestXmlLength":1174,"requestXmlSample":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Otp uid=\"999999990019\" tid=\"public\" ac=\"pub..."}}
+{"timestamp":"2025-07-17T23:32:55.797Z","level":"log","message":"UIDAI_RAW_RESPONSE","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"statusCode":200,"statusText":"","headers":{"server":"nginx/1.23.2","date":"Thu, 17 Jul 2025 23:32:55 GMT","content-type":"application/xml;charset=UTF-8","content-length":"192","connection":"keep-alive","strict-transport-security":"max-age=16070400; includeSubDomains"},"responseLength":192,"responsePreview":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OtpRes txn=\"cf6de9b8-d5a6-46aa-9b5e-404ca5728479\" err=\"940\" code=\"19060f8cf3564b85b1ac51a0ab0324b3\" ts=\"2025-07-18T05:02:55.832+05:30\" ret=\"n\" info=\"\"/>..."}}
+{"timestamp":"2025-07-17T23:32:55.798Z","level":"log","message":"UIDAI_RESPONSE_PARSED","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"cf6de9b8-d5a6-46aa-9b5e-404ca5728479","err":"940","code":"19060f8cf3564b85b1ac51a0ab0324b3","ts":"2025-07-18T05:02:55.832+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:32:55.799Z","level":"warn","message":"NO_SIGNATURE_IN_UIDAI_RESPONSE","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"cf6de9b8-d5a6-46aa-9b5e-404ca5728479","err":"940","code":"19060f8cf3564b85b1ac51a0ab0324b3","ts":"2025-07-18T05:02:55.832+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:32:55.799Z","level":"error","message":"OTP_INITIATION_FAILED_UIDAI","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{}}
+{"timestamp":"2025-07-17T23:32:55.801Z","level":"error","message":"AUTH_QR_FAILED","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"error":"Aadhaar OTP initiation failed: undefined","uid":"999999990019","redirectUri":"http://localhost:3002/callback","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:356:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:32:55.801Z","level":"error","message":"HTTP Exception: GET /auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","context":"AuditLogger","correlationId":"6c6a60bd-e4c3-4bf4-983d-29ae0ce7979b","payload":{"path":"/auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","method":"GET","statusCode":400,"error":"Aadhaar OTP initiation failed: undefined","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:356:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+[95m[Nest] 93291  - [39m07/18/2025, 5:04:53 AM [95m  DEBUG[39m [38;5;3m[AppController] [39m[95mHealth check requested[39m
+{"timestamp":"2025-07-17T23:34:53.707Z","level":"log","message":"PERFORMANCE_METRIC","context":"AuditLogger","correlationId":"8c0494f2-08b9-445c-ab5d-135d3b8a3b7b","payload":{"method":"GET","url":"/health","responseTime":"0ms"}}
+{"timestamp":"2025-07-17T23:34:53.715Z","level":"log","message":"TEST_CERTIFICATES_REQUEST","context":"AuditLogger","correlationId":"226d1708-22b4-4907-ac14-2037767ee264","payload":{}}
+{"timestamp":"2025-07-17T23:34:53.715Z","level":"log","message":"CERTIFICATE_VALIDATION_RESULT","context":"AuditLogger","correlationId":"226d1708-22b4-4907-ac14-2037767ee264","payload":{"valid":true,"details":{"uidai":{"path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/real_uidai_cert.cer","exists":true,"readable":true,"valid":true},"aua":{"key":{"path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/real_aua_private.pem","exists":true,"readable":true,"valid":true},"cert":{"path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/real_aua_cert.pem","exists":true,"readable":true,"valid":true}}}}}
+{"timestamp":"2025-07-17T23:34:53.715Z","level":"log","message":"PERFORMANCE_METRIC","context":"AuditLogger","correlationId":"226d1708-22b4-4907-ac14-2037767ee264","payload":{"method":"GET","url":"/auth/test/certificates","responseTime":"1ms"}}
+[2J[3J[H[[90m5:20:04 AM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m68[0m:[93m26[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m68[0m         licenseKey: this.licenseKey ? `${this.licenseKey.substring(0, 10)}...` : 'Not Found',
+[7m  [0m [91m                         ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m68[0m:[93m47[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m68[0m         licenseKey: this.licenseKey ? `${this.licenseKey.substring(0, 10)}...` : 'Not Found',
+[7m  [0m [91m                                              ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m113[0m:[93m156[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m113[0m <Otp uid="${uid}" tid="${this.terminalId}" ac="${this.auaCode}" sa="${this.subAuaCode || this.auaCode}" ver="${this.apiVersion}" txn="${txnId}" lk="${this.licenseKey}" ts="${timestamp}">
+[7m   [0m [91m                                                                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m161[0m:[93m157[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m161[0m <Auth uid="${uid}" tid="${this.terminalId}" ac="${this.auaCode}" sa="${this.subAuaCode || this.auaCode}" ver="${this.apiVersion}" txn="${txnId}" lk="${this.licenseKey}" ts="${timestamp}">
+[7m   [0m [91m                                                                                                                                                            ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m327[0m:[93m102[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m327[0m     const otpApiUrl = `${this.uidaiOtpUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                     ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m386[0m:[93m108[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m386[0m         const authApiUrl = `${this.uidaiAuthUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[[90m5:20:04 AM[0m] Found 6 errors. Watching for file changes.
+
+[2J[3J[H[[90m5:20:12 AM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m114[0m:[93m156[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m114[0m <Otp uid="${uid}" tid="${this.terminalId}" ac="${this.auaCode}" sa="${this.subAuaCode || this.auaCode}" ver="${this.apiVersion}" txn="${txnId}" lk="${this.licenseKey}" ts="${timestamp}">
+[7m   [0m [91m                                                                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m162[0m:[93m157[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m162[0m <Auth uid="${uid}" tid="${this.terminalId}" ac="${this.auaCode}" sa="${this.subAuaCode || this.auaCode}" ver="${this.apiVersion}" txn="${txnId}" lk="${this.licenseKey}" ts="${timestamp}">
+[7m   [0m [91m                                                                                                                                                            ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m328[0m:[93m102[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m328[0m     const otpApiUrl = `${this.uidaiOtpUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                     ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m387[0m:[93m108[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m387[0m         const authApiUrl = `${this.uidaiAuthUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[[90m5:20:12 AM[0m] Found 4 errors. Watching for file changes.
+
+[2J[3J[H[[90m5:20:22 AM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m162[0m:[93m157[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m162[0m <Auth uid="${uid}" tid="${this.terminalId}" ac="${this.auaCode}" sa="${this.subAuaCode || this.auaCode}" ver="${this.apiVersion}" txn="${txnId}" lk="${this.licenseKey}" ts="${timestamp}">
+[7m   [0m [91m                                                                                                                                                            ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m328[0m:[93m102[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m328[0m     const otpApiUrl = `${this.uidaiOtpUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                     ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m387[0m:[93m108[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m387[0m         const authApiUrl = `${this.uidaiAuthUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[[90m5:20:22 AM[0m] Found 3 errors. Watching for file changes.
+
+[2J[3J[H[[90m5:20:53 AM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m328[0m:[93m102[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m328[0m     const otpApiUrl = `${this.uidaiOtpUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                     ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m387[0m:[93m108[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m387[0m         const authApiUrl = `${this.uidaiAuthUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[[90m5:20:53 AM[0m] Found 2 errors. Watching for file changes.
+
+[2J[3J[H[[90m5:21:01 AM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m387[0m:[93m108[0m - [91merror[0m[90m TS2551: [0mProperty 'licenseKey' does not exist on type 'AadhaarProvider'. Did you mean 'auaLicenseKey'?
+
+[7m387[0m         const authApiUrl = `${this.uidaiAuthUrl}/${this.auaCode}/${uid0}/${uid1}/${encodeURIComponent(this.licenseKey)}`;
+[7m   [0m [91m                                                                                                           ~~~~~~~~~~[0m
+
+  [96msrc/modules/auth/providers/aadhaar.provider.ts[0m:[93m21[0m:[93m20[0m
+    [7m21[0m   private readonly auaLicenseKey: string; // For XML lk attribute
+    [7m  [0m [96m                   ~~~~~~~~~~~~~[0m
+    'auaLicenseKey' is declared here.
+
+[[90m5:21:01 AM[0m] Found 1 error. Watching for file changes.
+
+[2J[3J[H[[90m5:21:12 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m5:21:12 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m--- Starting Application Bootstrap ---[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCommonModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHealthModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m
+{"timestamp":"2025-07-17T23:51:12.802Z","level":"log","message":"PROVIDER_INITIALIZATION_START","context":"AuditLogger","correlationId":"d34e55a3-9bee-4feb-a007-ce0fb7b84c15","payload":{}}
+{"timestamp":"2025-07-17T23:51:12.803Z","level":"error","message":"PROVIDER_INITIALIZATION_FAILED","context":"AuditLogger","correlationId":"d34e55a3-9bee-4feb-a007-ce0fb7b84c15","payload":{"error":"Configuration key \"AUA_LICENSE_KEY\" does not exist","trace":"TypeError: Configuration key \"AUA_LICENSE_KEY\" does not exist\n    at ConfigService.getOrThrow (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/config/dist/config.service.js:132:19)\n    at new AadhaarProvider (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:53:47)\n    at Injector.instantiateClass (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/injector.js:413:19)\n    at callback (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/injector.js:70:45)\n    at async Injector.resolveConstructorParams (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/injector.js:168:24)\n    at async Injector.loadInstance (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/injector.js:75:13)\n    at async Injector.loadProvider (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/injector.js:103:9)\n    at async /Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/instance-loader.js:56:13\n    at async Promise.all (index 5)\n    at async InstanceLoader.createInstancesOfProviders (/Users/aaryanguglani/Desktop/projcects/aadhaar/node_modules/@nestjs/core/injector/instance-loader.js:55:9)"}}
+[32m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m
+[31m[Nest] 95844  - [39m07/18/2025, 5:21:12 AM [31m  ERROR[39m [38;5;3m[ExceptionHandler] [39mError: Failed to initialize AadhaarProvider: Configuration key "AUA_LICENSE_KEY" does not exist
+    at new AadhaarProvider [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39msrc/modules/auth/providers/aadhaar.provider.ts:91:13[90m)[39m
+    at Injector.instantiateClass [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/injector.js:413:19[90m)[39m
+    at callback [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/injector.js:70:45[90m)[39m
+    at async Injector.resolveConstructorParams [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/injector.js:168:24[90m)[39m
+    at async Injector.loadInstance [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/injector.js:75:13[90m)[39m
+    at async Injector.loadProvider [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/injector.js:103:9[90m)[39m
+    at async [90m/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at async InstanceLoader.createInstancesOfProviders [90m(/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/instance-loader.js:55:9[90m)[39m
+    at async [90m/Users/aaryanguglani/Desktop/projcects/aadhaar/[39mnode_modules/[4m@nestjs[24m/core/injector/instance-loader.js:40:13
+[2J[3J[H[[90m5:22:37 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m5:22:37 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m--- Starting Application Bootstrap ---[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCommonModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHealthModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m
+{"timestamp":"2025-07-17T23:52:37.764Z","level":"log","message":"PROVIDER_INITIALIZATION_START","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{}}
+{"timestamp":"2025-07-17T23:52:37.764Z","level":"log","message":"PROVIDER_INITIALIZATION_CONFIG","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"isDevelopment":true,"auaCode":"public","uidaiBaseUrl":"https://developer.uidai.gov.in","auaLicenseKey":"MG_g7jJVYU...","asaLicenseKey":"MFoSig475Z..."}}
+{"timestamp":"2025-07-17T23:52:37.765Z","level":"log","message":"LOADING_KEYS_START","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"hasP12Path":true,"hasPemPaths":true}}
+{"timestamp":"2025-07-17T23:52:37.765Z","level":"log","message":"LOADING_P12_CERTIFICATE","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+{"timestamp":"2025-07-17T23:52:37.807Z","level":"log","message":"P12_CERTIFICATE_LOADED_SUCCESSFULLY","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"hasPrivateKey":true,"hasCertificate":true,"alias":"publicauaforstagingservices"}}
+{"timestamp":"2025-07-17T23:52:37.807Z","level":"log","message":"KEYS_LOADED_SUCCESSFULLY","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"method":"P12"}}
+{"timestamp":"2025-07-17T23:52:37.807Z","level":"log","message":"PROVIDER_INITIALIZATION_SUCCESS","context":"AuditLogger","correlationId":"de7961b5-b0c9-4036-81a0-f884f7179c32","payload":{"loadedKeys":true}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mNestFactory created application instance.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mRunning in Development mode.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mHelmet security middleware configured.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mBodyParser middleware configured.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mCORS middleware configured.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mGlobal ValidationPipe configured.[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mServing static files from: /Users/aaryanguglani/Desktop/projcects/aadhaar/public[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32mAttempting to listen on 0.0.0.0:3002[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[CrossDeviceGateway] [39m[32m🔌 Cross-Device WebSocket Gateway initialized[39m
+{"timestamp":"2025-07-17T23:52:37.932Z","level":"log","message":"CROSS_DEVICE_WEBSOCKET_INITIALIZED","context":"AuditLogger","correlationId":"system","payload":{"timestamp":"2025-07-17T23:52:37.932Z"}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mCrossDeviceGateway subscribed to the "join_session" message[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mCrossDeviceGateway subscribed to the "get_session_status" message[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/qr, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/callback, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/verify/:sessionId, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId/status, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/:sessionId/complete, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/session/create, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/config/validate, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/connection, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/certificates, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/test/load, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/data/retrieve, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mCrossDeviceController {/auth/cross-device}:[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/initiate, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/authenticate/:sessionId, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/authenticate, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/session/create, POST} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/session/:sessionId/status, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/cross-device/sessions/active, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m✅✅✅ SERVER IS LISTENING! ✅✅✅[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m🚀 Application is running on: http://127.0.0.1:3002[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:22:37 AM [32m    LOG[39m [38;5;3m[Bootstrap] [39m[32m--- Bootstrap successful ---[39m
+{"timestamp":"2025-07-17T23:53:07.154Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"uid":"999999990019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:07.154Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"uid":"********0019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:07.154Z","level":"log","message":"CONSTRUCTED_OTP_API_URL","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"otpApiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8"}}
+{"timestamp":"2025-07-17T23:53:07.154Z","level":"log","message":"USING_P12_FOR_OTP_SIGNING","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:07 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:07 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mXML signed successfully with P12-extracted certificate[39m
+{"timestamp":"2025-07-17T23:53:07.208Z","level":"log","message":"SENDING_REQUEST_TO_UIDAI","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"apiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8","requestXmlLength":1174,"requestXmlSample":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Otp uid=\"999999990019\" tid=\"public\" ac=\"pub..."}}
+{"timestamp":"2025-07-17T23:53:07.368Z","level":"log","message":"UIDAI_RAW_RESPONSE","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"statusCode":200,"statusText":"","headers":{"server":"nginx/1.23.2","date":"Thu, 17 Jul 2025 23:53:07 GMT","content-type":"application/xml;charset=UTF-8","content-length":"192","connection":"keep-alive","strict-transport-security":"max-age=16070400; includeSubDomains"},"responseLength":192,"responsePreview":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OtpRes txn=\"d401be4c-60be-47d6-9439-718fefeb322f\" err=\"570\" code=\"4df190d4d35549c49833b27d54e296aa\" ts=\"2025-07-18T05:23:07.409+05:30\" ret=\"n\" info=\"\"/>..."}}
+{"timestamp":"2025-07-17T23:53:07.369Z","level":"log","message":"UIDAI_RESPONSE_PARSED","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"d401be4c-60be-47d6-9439-718fefeb322f","err":"570","code":"4df190d4d35549c49833b27d54e296aa","ts":"2025-07-18T05:23:07.409+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:07.369Z","level":"warn","message":"NO_SIGNATURE_IN_UIDAI_RESPONSE","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"d401be4c-60be-47d6-9439-718fefeb322f","err":"570","code":"4df190d4d35549c49833b27d54e296aa","ts":"2025-07-18T05:23:07.409+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:07.369Z","level":"error","message":"OTP_INITIATION_FAILED_UIDAI","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{}}
+{"timestamp":"2025-07-17T23:53:07.373Z","level":"error","message":"AUTH_QR_FAILED","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"error":"Aadhaar OTP initiation failed: undefined","uid":"999999990019","redirectUri":"http://localhost:3002/callback","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:53:07.373Z","level":"error","message":"HTTP Exception: GET /auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","context":"AuditLogger","correlationId":"27793593-514e-4abc-a1a8-7ce30dfa2c0b","payload":{"path":"/auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","method":"GET","statusCode":400,"error":"Aadhaar OTP initiation failed: undefined","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:53:43.684Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"uid":"999999990019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:43.684Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"uid":"********0019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:43.685Z","level":"log","message":"CONSTRUCTED_OTP_API_URL","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"otpApiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8"}}
+{"timestamp":"2025-07-17T23:53:43.685Z","level":"log","message":"USING_P12_FOR_OTP_SIGNING","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:43 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:43 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mXML signed successfully with P12-extracted certificate[39m
+{"timestamp":"2025-07-17T23:53:43.735Z","level":"log","message":"SENDING_REQUEST_TO_UIDAI","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"apiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8","requestXmlLength":1174,"requestXmlSample":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Otp uid=\"999999990019\" tid=\"public\" ac=\"pub..."}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"log","message":"UIDAI_RAW_RESPONSE","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"statusCode":200,"statusText":"","headers":{"server":"nginx/1.23.2","date":"Thu, 17 Jul 2025 23:53:44 GMT","content-type":"application/xml;charset=UTF-8","content-length":"192","connection":"keep-alive","strict-transport-security":"max-age=16070400; includeSubDomains"},"responseLength":192,"responsePreview":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OtpRes txn=\"f589103f-52cd-4869-96c0-b34f27875b0d\" err=\"570\" code=\"f78454d4672a40f2bfdcb2853f3ab5fc\" ts=\"2025-07-18T05:23:44.034+05:30\" ret=\"n\" info=\"\"/>..."}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"log","message":"UIDAI_RESPONSE_PARSED","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"f589103f-52cd-4869-96c0-b34f27875b0d","err":"570","code":"f78454d4672a40f2bfdcb2853f3ab5fc","ts":"2025-07-18T05:23:44.034+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"warn","message":"NO_SIGNATURE_IN_UIDAI_RESPONSE","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"f589103f-52cd-4869-96c0-b34f27875b0d","err":"570","code":"f78454d4672a40f2bfdcb2853f3ab5fc","ts":"2025-07-18T05:23:44.034+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"error","message":"OTP_INITIATION_FAILED_UIDAI","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"error","message":"AUTH_QR_FAILED","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"error":"Aadhaar OTP initiation failed: undefined","uid":"999999990019","redirectUri":"http://localhost:3002/callback","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:53:44.031Z","level":"error","message":"HTTP Exception: GET /auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","context":"AuditLogger","correlationId":"18315fd0-2dd6-48d4-8a00-5693428fc85e","payload":{"path":"/auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","method":"GET","statusCode":400,"error":"Aadhaar OTP initiation failed: undefined","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:53:52.679Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"uid":"999999990019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:52.679Z","level":"log","message":"AUTH_QR_INITIATED","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"uid":"********0019","redirectUri":"http://localhost:3002/callback"}}
+{"timestamp":"2025-07-17T23:53:52.679Z","level":"log","message":"CONSTRUCTED_OTP_API_URL","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"otpApiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8"}}
+{"timestamp":"2025-07-17T23:53:52.679Z","level":"log","message":"USING_P12_FOR_OTP_SIGNING","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"p12Path":"/Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12"}}
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:52 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mSuccessfully extracted private key and certificate from P12 file: /Users/aaryanguglani/Desktop/projcects/aadhaar/certs/New_Public_AUA_for_Staging_Services_RootSigned_2428.p12[39m
+[32m[Nest] 96572  - [39m07/18/2025, 5:23:52 AM [32m    LOG[39m [38;5;3m[CryptoUtils] [39m[32mXML signed successfully with P12-extracted certificate[39m
+{"timestamp":"2025-07-17T23:53:52.734Z","level":"log","message":"SENDING_REQUEST_TO_UIDAI","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"apiUrl":"https://developer.uidai.gov.in/uidotp/2.5/public/9/9/MFoSig475ZNf8Fex6pRZJvFgXoOJhiC67s8cbKCTkkI43QB2a0vKlY8","requestXmlLength":1174,"requestXmlSample":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Otp uid=\"999999990019\" tid=\"public\" ac=\"pub..."}}
+{"timestamp":"2025-07-17T23:53:53.247Z","level":"log","message":"UIDAI_RAW_RESPONSE","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"statusCode":200,"statusText":"","headers":{"server":"nginx/1.23.2","date":"Thu, 17 Jul 2025 23:53:53 GMT","content-type":"application/xml;charset=UTF-8","content-length":"192","connection":"keep-alive","strict-transport-security":"max-age=16070400; includeSubDomains"},"responseLength":192,"responsePreview":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OtpRes txn=\"b1bbb623-4f62-4fc7-afd1-9af46ea4acf2\" err=\"570\" code=\"7a9a7e84e48e43ebbf31cecf36694556\" ts=\"2025-07-18T05:23:53.249+05:30\" ret=\"n\" info=\"\"/>..."}}
+{"timestamp":"2025-07-17T23:53:53.247Z","level":"log","message":"UIDAI_RESPONSE_PARSED","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"b1bbb623-4f62-4fc7-afd1-9af46ea4acf2","err":"570","code":"7a9a7e84e48e43ebbf31cecf36694556","ts":"2025-07-18T05:23:53.249+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:53.247Z","level":"warn","message":"NO_SIGNATURE_IN_UIDAI_RESPONSE","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"parsedResponse":{"OtpRes":{"$":{"txn":"b1bbb623-4f62-4fc7-afd1-9af46ea4acf2","err":"570","code":"7a9a7e84e48e43ebbf31cecf36694556","ts":"2025-07-18T05:23:53.249+05:30","ret":"n","info":""}}}}}
+{"timestamp":"2025-07-17T23:53:53.248Z","level":"error","message":"OTP_INITIATION_FAILED_UIDAI","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{}}
+{"timestamp":"2025-07-17T23:53:53.248Z","level":"error","message":"AUTH_QR_FAILED","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"error":"Aadhaar OTP initiation failed: undefined","uid":"999999990019","redirectUri":"http://localhost:3002/callback","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:53:53.248Z","level":"error","message":"HTTP Exception: GET /auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","context":"AuditLogger","correlationId":"55390361-297f-408d-a393-f3d39caba6f7","payload":{"path":"/auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","method":"GET","statusCode":400,"error":"Aadhaar OTP initiation failed: undefined","stack":"HttpException: Aadhaar OTP initiation failed: undefined\n    at AadhaarProvider.initiateAuth (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/providers/aadhaar.provider.ts:361:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async AuthController.getQrCode (/Users/aaryanguglani/Desktop/projcects/aadhaar/src/modules/auth/auth.controller.ts:80:22)"}}
+{"timestamp":"2025-07-17T23:54:04.783Z","level":"log","message":"TEST_LOAD_REQUEST","context":"AuditLogger","correlationId":"e1185307-5cf6-417c-8551-f3ba9d379ed8","payload":{}}
+{"timestamp":"2025-07-17T23:54:04.783Z","level":"log","message":"PERFORMANCE_METRIC","context":"AuditLogger","correlationId":"e1185307-5cf6-417c-8551-f3ba9d379ed8","payload":{"method":"GET","url":"/auth/test/load","responseTime":"0ms"}}

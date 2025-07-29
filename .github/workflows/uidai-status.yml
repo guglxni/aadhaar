@@ -1,0 +1,153 @@
+name: UIDAI Live Status Monitor
+
+on:
+  schedule:
+    # Every 30 minutes during business hours (IST)
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_test:
+        description: 'Force run integration test'
+        required: false
+        default: 'false'
+
+jobs:
+  uidai-status-check:
+    runs-on: ubuntu-latest
+    if: github.repository == 'aaryanguglani/aadhaar'  # Prevent fork execution
+    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run live integration test
+        id: integration-test
+        run: |
+          # Run a minimal integration test to generate response data
+          timeout 60s npm run test:e2e || echo "Test completed with timeout"
+        continue-on-error: true
+      
+      - name: Generate status files
+        id: status
+        run: |
+          npm run status:generate
+          echo "Generated status files"
+        continue-on-error: true
+      
+      - name: Extract status metadata
+        id: metadata
+        run: |
+          if [ -f "status-badge/api.json" ]; then
+            SEVERITY=$(jq -r '.severity' status-badge/api.json)
+            ERR=$(jq -r '.err' status-badge/api.json)
+            ACTN=$(jq -r '.actn' status-badge/api.json)
+            echo "severity=$SEVERITY" >> $GITHUB_OUTPUT
+            echo "error=$ERR" >> $GITHUB_OUTPUT
+            echo "action=$ACTN" >> $GITHUB_OUTPUT
+          else
+            echo "severity=unknown" >> $GITHUB_OUTPUT
+            echo "error=999" >> $GITHUB_OUTPUT
+            echo "action=" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Deploy badge data to GitHub Pages
+        if: steps.metadata.outputs.severity != 'unknown'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./status-badge
+          destination_dir: .
+          keep_files: false
+          commit_message: 'Deploy UIDAI status badge [${{ steps.metadata.outputs.error }}/${{ steps.metadata.outputs.action }}]'
+      
+      - name: Commit status updates
+        if: steps.metadata.outputs.severity != 'success'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if there are changes
+          if ! git diff --quiet STATUS.md; then
+            git add STATUS.md
+            git commit -m "chore(status): auto-update to ${{ steps.metadata.outputs.error }}/${{ steps.metadata.outputs.action }} [skip ci]"
+            git push
+          fi
+        continue-on-error: true
+      
+      - name: Secret scanning check
+        run: |
+          # Check for accidentally exposed secrets in logs and files
+          if grep -r "sk_" . --exclude-dir=.git --exclude="*.log" || \
+             grep -r "ghp_" . --exclude-dir=.git --exclude="*.log" || \
+             grep -r "webhook.*http" . --exclude-dir=.git --exclude="*.md"; then
+            echo "::error::Potential secret detected in repository"
+            exit 1
+          fi
+        continue-on-error: true
+      
+      - name: Notify on success
+        if: steps.metadata.outputs.severity == 'success'
+        run: |
+          echo "🎯 UIDAI Integration: PRODUCTION READY ✅"
+          if [ -n "${{ secrets.WEBHOOK_SUCCESS_URL }}" ]; then
+            curl -X POST "${{ secrets.WEBHOOK_SUCCESS_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{"text":"🎯 UIDAI Integration: PRODUCTION READY ✅","error":"${{ steps.metadata.outputs.error }}","status":"success"}' \
+              --silent --fail || echo "Webhook failed"
+          fi
+      
+      - name: Notify on warning
+        if: steps.metadata.outputs.severity == 'warning'
+        run: |
+          echo "::warning file=STATUS.md::UIDAI service unavailable (A202) - expected recovery in 2-5 minutes"
+          if [ -n "${{ secrets.WEBHOOK_WARNING_URL }}" ]; then
+            curl -X POST "${{ secrets.WEBHOOK_WARNING_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{"text":"⚠️ UIDAI Integration: Service Outage (A202)","error":"${{ steps.metadata.outputs.error }}/${{ steps.metadata.outputs.action }}","status":"warning"}' \
+              --silent --fail || echo "Webhook failed"
+          fi
+      
+      - name: Notify on error
+        if: steps.metadata.outputs.severity == 'error'
+        run: |
+          echo "::error file=STATUS.md::UIDAI client error detected - manual intervention required"
+          if [ -n "${{ secrets.WEBHOOK_ERROR_URL }}" ]; then
+            curl -X POST "${{ secrets.WEBHOOK_ERROR_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{"text":"🚨 UIDAI Integration: CLIENT ERROR","error":"${{ steps.metadata.outputs.error }}","status":"error","action_required":true}' \
+              --silent --fail || echo "Webhook failed"
+          fi
+      
+      - name: Fail job on client errors
+        if: steps.metadata.outputs.severity == 'error'
+        run: |
+          echo "Pipeline failing due to client error: ${{ steps.metadata.outputs.error }}"
+          exit 1
+      
+      - name: Upload status artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uidai-status-${{ github.run_number }}
+          path: |
+            STATUS.md
+            status-badge/
+            /tmp/uidai_latest_response.json
+          retention-days: 7 

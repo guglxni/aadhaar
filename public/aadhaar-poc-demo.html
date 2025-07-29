@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIDAI Aadhaar POC Demo - Live Sandbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+            --dark-bg: #111827;
+            --light-bg: #1f2937;
+            --border-color: #374151;
+            --text-light: #f9fafb;
+            --text-dark: #d1d5db;
+            --blue-accent: #3b82f6;
+            --green-accent: #22c55e;
+            --red-accent: #ef4444;
+            --orange-accent: #f97316;
+            --yellow-accent: #eab308;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        .card {
+            background: var(--light-bg);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .card-header h3 i {
+            margin-right: 0.75rem;
+            color: var(--blue-accent);
+        }
+        .card-header p {
+            margin: 0.25rem 0 0;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .config-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-family: 'Fira Code', monospace;
+        }
+        .config-item label {
+            color: var(--text-dark);
+            width: 120px;
+        }
+        .config-item .config-value-input {
+            flex-grow: 1;
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            color: var(--text-light);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+        }
+        .health-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .health-item {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .health-item.healthy {
+            border-color: var(--green-accent);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.1);
+        }
+        .health-item.unhealthy {
+            border-color: var(--red-accent);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+        }
+        .health-item.warning {
+            border-color: var(--yellow-accent);
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.1);
+        }
+        .health-status {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .health-status.healthy { color: var(--green-accent); }
+        .health-status.unhealthy { color: var(--red-accent); }
+        .health-status.warning { color: var(--yellow-accent); }
+        .health-status.loading { color: var(--blue-accent); }
+        .health-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .health-detail {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+        }
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+        .auto-refresh input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+        .last-updated {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--blue-accent);
+        }
+        .btn:hover { filter: brightness(1.15); }
+        .btn.btn-secondary { background-color: #4a5568; }
+        .btn.btn-primary { background-image: var(--primary-gradient); border: none; }
+        .btn.btn-success { background-color: var(--green-accent); }
+        .response-viewer {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 15px;
+            background-color: #0d1117;
+        }
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f2937;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .response-header span { font-weight: bold; }
+        .request-info {
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            font-family: 'Fira Code', monospace;
+        }
+        #apiRequestUrl { color: var(--orange-accent); }
+        pre { margin: 0; }
+        #apiResponse {
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #e5e7eb;
+        }
+        #globalLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--blue-accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div id="globalLoader" style="display: none;"><div class="spinner"></div></div>
+    <div class="container">
+        <div class="header">
+            <h1>UIDAI Aadhaar Live Sandbox</h1>
+            <p>Directly interacting with the official UIDAI sandbox environment.</p>
+        </div>
+
+        <!-- UIDAI Sandbox Health Dashboard -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-heartbeat"></i> UIDAI Sandbox Health Monitor</h3>
+                <p>Real-time status of official UIDAI sandbox connectivity and configuration.</p>
+            </div>
+            <div class="card-body">
+                <div class="health-dashboard">
+                    <div class="health-item" id="serverHealth">
+                        <div class="health-status loading pulse"><i class="fas fa-server"></i></div>
+                        <div class="health-title">Server Status</div>
+                        <div class="health-detail">Checking...</div>
+                    </div>
+                    <div class="health-item" id="configHealth">
+                        <div class="health-status loading pulse"><i class="fas fa-cog"></i></div>
+                        <div class="health-title">Configuration</div>
+                        <div class="health-detail">Validating...</div>
+                    </div>
+                    <div class="health-item" id="uidaiConnection">
+                        <div class="health-status loading pulse"><i class="fas fa-link"></i></div>
+                        <div class="health-title">UIDAI Connection</div>
+                        <div class="health-detail">Testing...</div>
+                    </div>
+                    <div class="health-item" id="certificateStatus">
+                        <div class="health-status loading pulse"><i class="fas fa-certificate"></i></div>
+                        <div class="health-title">Certificates</div>
+                        <div class="health-detail">Verifying...</div>
+                    </div>
+                </div>
+                <div class="auto-refresh">
+                    <input type="checkbox" id="autoRefresh" checked>
+                    <label for="autoRefresh">Auto-refresh every 30 seconds</label>
+                    <button id="refreshHealth" class="btn btn-success btn-sm" style="margin-left: auto;">
+                        <i class="fas fa-sync-alt"></i> Refresh Now
+                    </button>
+                </div>
+                <div class="last-updated" id="lastUpdated">Last updated: Never</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-sliders-h"></i> Sandbox Configuration</h3>
+                <p>Using official UIDAI-provided sandbox credentials.</p>
+            </div>
+            <div class="card-body">
+                <div class="config-item">
+                    <label>LICENSE_KEY:</label>
+                    <input type="text" class="config-value-input" value="MG_g7jJVYUIW7cLYXY5yaqKD6D1TuhjTJdQRRKP1qALVyORrG1pf0QU" readonly>
+                </div>
+                <div class="config-item">
+                    <label>Test UID:</label>
+                    <input type="text" id="uidInput" class="config-value-input" value="999999990019">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-bolt"></i> Actions</h3>
+                <p>Trigger backend actions to interact with the sandbox.</p>
+            </div>
+            <div class="card-body">
+                <div class="actions">
+                    <button id="checkHealth" class="btn btn-secondary"><i class="fas fa-heartbeat"></i> Health Check</button>
+                    <button id="validateConfig" class="btn btn-secondary"><i class="fas fa-check-circle"></i> Validate Config</button>
+                    <button id="testConnection" class="btn btn-secondary"><i class="fas fa-link"></i> Test Connection</button>
+                    <button id="initiateAuth" class="btn btn-primary"><i class="fas fa-rocket"></i> Initiate Auth</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-terminal"></i> Live Interaction</h3>
+                <p>Shows the real-time request and raw response from the server.</p>
+            </div>
+            <div class="card-body">
+                <div class="request-info">
+                    <strong>Requesting:</strong> <code id="apiRequestUrl">...</code>
+                </div>
+                <div class="response-viewer">
+                    <div class="response-header">
+                        <span>Server Response</span>
+                        <button id="copyResponse" class="btn btn-secondary btn-sm"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code id="apiResponse" class="json">{ "message": "Click an action button to see the live response." }</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const globalLoader = document.getElementById('globalLoader');
+        const apiResponseElement = document.getElementById('apiResponse');
+        const apiRequestUrlElement = document.getElementById('apiRequestUrl');
+        const uidInputElement = document.getElementById('uidInput');
+        const copyButton = document.getElementById('copyResponse');
+        const autoRefreshCheckbox = document.getElementById('autoRefresh');
+        const refreshButton = document.getElementById('refreshHealth');
+        const lastUpdatedElement = document.getElementById('lastUpdated');
+
+        let healthCheckInterval;
+
+        function showLoader(show) {
+            globalLoader.style.display = show ? 'flex' : 'none';
+        }
+
+        function displayResponse(data, isError = false) {
+            const jsonString = JSON.stringify(data, null, 2);
+            apiResponseElement.textContent = jsonString;
+            apiResponseElement.className = isError ? 'json error' : 'json';
+            hljs.highlightElement(apiResponseElement);
+        }
+
+        function updateHealthItem(elementId, status, title, detail) {
+            const element = document.getElementById(elementId);
+            const statusIcon = element.querySelector('.health-status');
+            const titleElement = element.querySelector('.health-title');
+            const detailElement = element.querySelector('.health-detail');
+
+            // Remove all status classes
+            element.classList.remove('healthy', 'unhealthy', 'warning');
+            statusIcon.classList.remove('healthy', 'unhealthy', 'warning', 'loading', 'pulse');
+
+            // Add new status
+            element.classList.add(status);
+            statusIcon.classList.add(status);
+            
+            // Update content
+            titleElement.textContent = title;
+            detailElement.textContent = detail;
+
+            // Update icon based on status
+            const icon = statusIcon.querySelector('i');
+            if (status === 'healthy') {
+                icon.className = 'fas fa-check-circle';
+            } else if (status === 'unhealthy') {
+                icon.className = 'fas fa-times-circle';
+            } else if (status === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            }
+        }
+
+        async function checkServerHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                if (response.ok) {
+                    updateHealthItem('serverHealth', 'healthy', 'Server Status', 'Online & Ready');
+                } else {
+                    updateHealthItem('serverHealth', 'unhealthy', 'Server Status', 'Error Response');
+                }
+            } catch (error) {
+                updateHealthItem('serverHealth', 'unhealthy', 'Server Status', 'Connection Failed');
+            }
+        }
+
+        async function checkConfigHealth() {
+            try {
+                const response = await fetch('/auth/config/validate');
+                const data = await response.json();
+                if (response.ok && data.valid) {
+                    const errorCount = data.errors ? data.errors.length : 0;
+                    if (errorCount === 0) {
+                        updateHealthItem('configHealth', 'healthy', 'Configuration', 'All Valid');
+                    } else {
+                        updateHealthItem('configHealth', 'warning', 'Configuration', `${errorCount} Issues`);
+                    }
+                } else {
+                    updateHealthItem('configHealth', 'unhealthy', 'Configuration', 'Invalid Config');
+                }
+            } catch (error) {
+                updateHealthItem('configHealth', 'unhealthy', 'Configuration', 'Check Failed');
+            }
+        }
+
+        async function checkUidaiConnection() {
+            try {
+                const response = await fetch('/auth/test/connection');
+                const data = await response.json();
+                if (response.ok && data.status === 'success') {
+                    updateHealthItem('uidaiConnection', 'healthy', 'UIDAI Connection', 'Connected');
+                } else {
+                    updateHealthItem('uidaiConnection', 'unhealthy', 'UIDAI Connection', 'Failed');
+                }
+            } catch (error) {
+                updateHealthItem('uidaiConnection', 'unhealthy', 'UIDAI Connection', 'Unreachable');
+            }
+        }
+
+        async function checkCertificateStatus() {
+            try {
+                const response = await fetch('/auth/test/certificates');
+                const data = await response.json();
+                if (response.ok) {
+                    updateHealthItem('certificateStatus', 'healthy', 'Certificates', 'Valid & Loaded');
+                } else {
+                    updateHealthItem('certificateStatus', 'warning', 'Certificates', 'Issues Found');
+                }
+            } catch (error) {
+                updateHealthItem('certificateStatus', 'unhealthy', 'Certificates', 'Check Failed');
+            }
+        }
+
+        async function performFullHealthCheck() {
+            const checks = [
+                checkServerHealth(),
+                checkConfigHealth(),
+                checkUidaiConnection(),
+                checkCertificateStatus()
+            ];
+
+            await Promise.all(checks);
+            lastUpdatedElement.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        function startAutoRefresh() {
+            if (healthCheckInterval) {
+                clearInterval(healthCheckInterval);
+            }
+            
+            if (autoRefreshCheckbox.checked) {
+                healthCheckInterval = setInterval(performFullHealthCheck, 30000);
+            }
+        }
+
+        async function makeRequest(endpoint, method = 'GET', body = null) {
+            showLoader(true);
+            const displayEndpoint = body && body.uid ? `${endpoint} (UID: ${body.uid})` : endpoint;
+            apiRequestUrlElement.textContent = `${method} ${displayEndpoint}`;
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body ? JSON.stringify(body) : null,
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw data; 
+                }
+                displayResponse(data);
+            } catch (error) {
+                console.error(error);
+                displayResponse(error, true);
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Event listeners
+        refreshButton.addEventListener('click', performFullHealthCheck);
+        autoRefreshCheckbox.addEventListener('change', startAutoRefresh);
+
+        document.getElementById('checkHealth').addEventListener('click', () => makeRequest('/health'));
+        document.getElementById('validateConfig').addEventListener('click', () => makeRequest('/auth/config/validate'));
+        document.getElementById('testConnection').addEventListener('click', () => makeRequest('/auth/test/connection'));
+        document.getElementById('initiateAuth').addEventListener('click', () => {
+            const uid = uidInputElement.value;
+            if (uid && /^\\d{12}$/.test(uid)) {
+                makeRequest('/auth/qr', 'POST', { uid });
+            } else {
+                const error = { error: 'Invalid UID', message: 'Please enter a valid 12-digit UID.' };
+                displayResponse(error, true);
+                alert(error.message);
+            }
+        });
+
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(apiResponseElement.textContent).then(() => {
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => { copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
+            }).catch(err => console.error('Failed to copy: ', err));
+        });
+
+        // Initialize
+        displayResponse({ message: "Click an action button to begin." });
+        performFullHealthCheck();
+        startAutoRefresh();
+    });
+    </script>
+</body>
+</html> 

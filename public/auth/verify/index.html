@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIDAI Cross-Device Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass rounded-2xl p-6 w-full max-w-md">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <div class="mx-auto w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white mb-2">UIDAI Verification</h1>
+                <p class="text-white text-opacity-80 text-sm">Complete your authentication securely</p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center">
+                <div class="animate-spin w-8 h-8 border-4 border-white border-opacity-30 border-t-white rounded-full mx-auto mb-4"></div>
+                <p class="text-white text-opacity-80">Loading verification details...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="hidden text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold text-white mb-2">Verification Error</h2>
+                <p id="errorMessage" class="text-white text-opacity-80 mb-4"></p>
+                <div class="flex space-x-2 justify-center">
+                    <button onclick="retryVerification()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all">
+                        Retry
+                    </button>
+                    <button onclick="window.close()" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+            <!-- Verification Form -->
+            <div id="verificationForm" class="hidden">
+                <div class="mb-6">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4 mb-4">
+                        <p class="text-white text-sm mb-2">Verifying UID:</p>
+                        <p id="displayUID" class="text-white font-mono text-lg"></p>
+                    </div>
+                </div>
+
+                <!-- Test UIDs Selection -->
+                <div class="mb-6">
+                    <label class="block text-white text-sm font-medium mb-3">Select Test UID for Demo:</label>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="selectTestUID('999941057058', 'Shivshankar Choudhury')" 
+                                class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white text-left p-3 rounded-lg transition-all">
+                            <div class="font-medium">999941057058</div>
+                            <div class="text-sm opacity-80">Shivshankar Choudhury</div>
+                        </button>
+                        <button onclick="selectTestUID('999971658847', 'Kumar Agarwal')" 
+                                class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white text-left p-3 rounded-lg transition-all">
+                            <div class="font-medium">999971658847</div>
+                            <div class="text-sm opacity-80">Kumar Agarwal</div>
+                        </button>
+                        <button onclick="selectTestUID('999933119405', 'Fatima Bedi')" 
+                                class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white text-left p-3 rounded-lg transition-all">
+                            <div class="font-medium">999933119405</div>
+                            <div class="text-sm opacity-80">Fatima Bedi</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Biometric Simulation -->
+                <div class="mb-6">
+                    <label class="block text-white text-sm font-medium mb-3">Authentication Method:</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="startFingerprint()" class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg transition-all text-center">
+                            <svg class="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <div class="text-sm">Fingerprint</div>
+                        </button>
+                        <button onclick="startOTP()" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg transition-all text-center">
+                            <svg class="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                            <div class="text-sm">SMS OTP</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Authentication Progress -->
+                <div id="authProgress" class="hidden mb-6">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="flex items-center justify-center mb-3">
+                            <div class="animate-spin w-6 h-6 border-2 border-white border-opacity-30 border-t-white rounded-full"></div>
+                        </div>
+                        <p id="authProgressText" class="text-white text-center text-sm"></p>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="successState" class="hidden text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-white mb-2">Verification Complete!</h2>
+                    <p class="text-white text-opacity-80 mb-4">You can now close this page and return to the main device.</p>
+                    <button onclick="window.close()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+        let verificationData = null;
+
+        // Extract session ID from URL
+        window.addEventListener('DOMContentLoaded', async () => {
+            const pathParts = window.location.pathname.split('/');
+            sessionId = pathParts[pathParts.length - 1];
+            
+            if (!sessionId || sessionId === 'index.html') {
+                showError('Invalid verification link');
+                return;
+            }
+            
+            await loadVerificationData();
+        });
+
+        async function loadVerificationData() {
+            try {
+                const response = await fetch(`/auth/session/${sessionId}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Session not found');
+                }
+                
+                verificationData = data;
+                document.getElementById('displayUID').textContent = data.uid;
+                
+                // Show form
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('verificationForm').classList.remove('hidden');
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function selectTestUID(testUID, name) {
+            if (testUID !== verificationData.uid) {
+                alert('Please select the correct UID for this verification session');
+                return;
+            }
+            
+            // All test UIDs are valid for demo purposes
+            document.querySelector('[onclick*="selectTestUID"]').style.display = 'none';
+        }
+
+        async function startFingerprint() {
+            showProgress('Place your finger on the sensor...');
+            
+            // Simulate fingerprint scanning
+            setTimeout(() => {
+                updateProgress('Scanning fingerprint...');
+            }, 1000);
+            
+            setTimeout(() => {
+                updateProgress('Verifying with UIDAI...');
+            }, 2500);
+            
+            setTimeout(async () => {
+                await completeVerification('fingerprint');
+            }, 4000);
+        }
+
+        async function startOTP() {
+            showProgress('Sending OTP to registered mobile...');
+            
+            // Simulate OTP flow
+            setTimeout(() => {
+                updateProgress('OTP sent! Enter: 123456');
+            }, 1500);
+            
+            setTimeout(() => {
+                updateProgress('Verifying OTP with UIDAI...');
+            }, 3000);
+            
+            setTimeout(async () => {
+                await completeVerification('otp');
+            }, 4500);
+        }
+
+        function showProgress(text) {
+            document.getElementById('authProgressText').textContent = text;
+            document.getElementById('authProgress').classList.remove('hidden');
+        }
+
+        function updateProgress(text) {
+            document.getElementById('authProgressText').textContent = text;
+        }
+
+        async function completeVerification(method) {
+            try {
+                updateProgress('Sending verification data to server...');
+                
+                const response = await fetch(`/auth/session/${sessionId}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        method: method,
+                        userData: {
+                            name: 'Verified User',
+                            uid: verificationData.uid
+                        }
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('authProgress').classList.add('hidden');
+                    document.getElementById('successState').classList.remove('hidden');
+                } else {
+                    throw new Error(result.message || 'Verification failed');
+                }
+                
+            } catch (error) {
+                console.error('Verification Error:', error);
+                showError('Verification failed: ' + error.message);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('verificationForm').classList.add('hidden');
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorState').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html> 

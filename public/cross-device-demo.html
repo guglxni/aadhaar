@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Device UIDAI Middleware Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .content {
+            padding: 30px;
+        }
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .demo-section h3 {
+            margin-top: 0;
+            color: #764ba2;
+            font-size: 1.3em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .qr-code {
+            max-width: 300px;
+            max-height: 300px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        .status.pending {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .flow-step {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            text-align: center;
+        }
+        .flow-step .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .websocket-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .websocket-status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        .websocket-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .session-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .hidden {
+            display: none;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Cross-Device UIDAI Middleware</h1>
+            <p>Secure Aadhaar authentication with real UIDAI sandbox integration</p>
+        </div>
+
+        <div class="content">
+            <!-- How it Works -->
+            <div class="demo-section">
+                <h3>🔄 How Cross-Device Authentication Works</h3>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <h4>Initiate</h4>
+                        <p>Enter UID and generate QR code</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <h4>UIDAI OTP</h4>
+                        <p>Real OTP sent via UIDAI sandbox</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <h4>Scan QR</h4>
+                        <p>Use mobile device to scan QR code</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <h4>Authenticate</h4>
+                        <p>Enter OTP on mobile device</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <h4>Complete</h4>
+                        <p>Real-time sync via WebSocket</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Form -->
+            <div class="demo-section">
+                <h3>🚀 Start Cross-Device Authentication</h3>
+                <div class="form-group">
+                    <label for="uid">Aadhaar UID (for testing, use: 999999990019):</label>
+                    <input type="text" id="uid" placeholder="Enter 12-digit Aadhaar UID" maxlength="12" value="999999990019">
+                </div>
+                <button id="startAuth" onclick="startAuthentication()">
+                    <span id="startLoading" class="loading hidden"></span>
+                    Generate QR Code & Start Authentication
+                </button>
+            </div>
+
+            <!-- Status Display -->
+            <div id="statusContainer" class="hidden">
+                <div class="demo-section">
+                    <h3>📊 Authentication Status 
+                        <span id="websocketStatus" class="websocket-status disconnected">WebSocket: Disconnected</span>
+                    </h3>
+                    <div id="status" class="status pending">Initializing...</div>
+                    
+                    <div id="sessionInfo" class="session-info hidden">
+                        <strong>Session Details:</strong><br>
+                        <span id="sessionDetails"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Code Display -->
+            <div id="qrContainer" class="demo-section hidden">
+                <h3>📱 Scan QR Code with Mobile Device</h3>
+                <div class="qr-container">
+                    <img id="qrCode" class="qr-code" alt="QR Code">
+                </div>
+                <div class="info-box">
+                    <strong>Instructions:</strong>
+                    <ol>
+                        <li>Scan the QR code above with your mobile device</li>
+                        <li>This will open the authentication page on your mobile</li>
+                        <li>Enter the OTP sent to your registered mobile number</li>
+                        <li>Watch this page for real-time authentication status</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Authentication Result -->
+            <div id="resultContainer" class="demo-section hidden">
+                <h3>✅ Authentication Result</h3>
+                <div id="authResult" class="session-info"></div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div class="demo-section">
+                <h3>🔗 API Endpoints</h3>
+                <div class="info-box">
+                    <strong>Cross-Device UIDAI Middleware Endpoints:</strong><br>
+                    <code>GET /auth/cross-device/initiate?uid={uid}</code> - Start authentication<br>
+                    <code>GET /auth/cross-device/authenticate/{sessionId}</code> - Mobile auth page<br>
+                    <code>POST /auth/cross-device/authenticate</code> - Complete authentication<br>
+                    <code>GET /auth/cross-device/session/{sessionId}/status</code> - Session status<br>
+                    <code>GET /auth/cross-device/sessions/active</code> - Active sessions<br>
+                    <br>
+                    <strong>WebSocket:</strong> <code>ws://localhost:3002</code> - Real-time updates
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        let websocket = null;
+
+        // WebSocket connection for real-time updates
+        function connectWebSocket() {
+            if (websocket) {
+                websocket.close();
+            }
+
+            websocket = new WebSocket('ws://localhost:3002');
+            
+            websocket.onopen = () => {
+                updateWebSocketStatus(true);
+                console.log('🔌 WebSocket connected');
+            };
+
+            websocket.onclose = () => {
+                updateWebSocketStatus(false);
+                console.log('🔌 WebSocket disconnected');
+                // Attempt to reconnect after 3 seconds
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            websocket.onerror = (error) => {
+                console.error('🔌 WebSocket error:', error);
+                updateWebSocketStatus(false);
+            };
+
+            websocket.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleWebSocketMessage(data);
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
+                }
+            };
+        }
+
+        function updateWebSocketStatus(connected) {
+            const statusEl = document.getElementById('websocketStatus');
+            statusEl.textContent = `WebSocket: ${connected ? 'Connected' : 'Disconnected'}`;
+            statusEl.className = `websocket-status ${connected ? 'connected' : 'disconnected'}`;
+        }
+
+        function handleWebSocketMessage(data) {
+            console.log('📨 WebSocket message:', data);
+            
+            switch (data.type) {
+                case 'otp_sent':
+                    updateStatus('OTP sent to registered mobile number via UIDAI', 'pending');
+                    break;
+                case 'auth_starting':
+                    updateStatus('🔄 Authentication in progress...', 'pending');
+                    break;
+                case 'auth_completed':
+                    updateStatus('✅ Authentication successful!', 'success');
+                    showAuthResult(data);
+                    break;
+                case 'auth_failed':
+                    updateStatus(`❌ Authentication failed: ${data.error}`, 'error');
+                    break;
+                case 'device_joined':
+                    updateStatus(`📱 Mobile device connected (${data.deviceType})`, 'pending');
+                    break;
+            }
+        }
+
+        async function startAuthentication() {
+            const uid = document.getElementById('uid').value;
+            const startButton = document.getElementById('startAuth');
+            const loadingSpinner = document.getElementById('startLoading');
+            
+            if (!uid || uid.length !== 12) {
+                alert('Please enter a valid 12-digit Aadhaar UID');
+                return;
+            }
+
+            // Show loading state
+            startButton.disabled = true;
+            loadingSpinner.classList.remove('hidden');
+            
+            try {
+                updateStatus('🚀 Initiating cross-device authentication...', 'pending');
+                document.getElementById('statusContainer').classList.remove('hidden');
+
+                const response = await fetch(`/auth/cross-device/initiate?uid=${uid}&redirectUri=http://localhost:3002/callback`);
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSessionId = result.sessionId;
+                    
+                    // Show session info
+                    document.getElementById('sessionDetails').innerHTML = `
+                        Session ID: ${result.sessionId}<br>
+                        UID: ${uid}<br>
+                        UIDAI OTP: ${result.hasUidaiOtp ? 'Yes' : 'No'}<br>
+                        Auth URL: ${result.qrData.authUrl}<br>
+                        Expires: ${new Date(result.qrData.expiresAt).toLocaleString()}
+                    `;
+                    document.getElementById('sessionInfo').classList.remove('hidden');
+                    
+                    // Show QR code
+                    const qrResponse = await fetch(`/auth/qr?uid=${uid}&redirectUri=${encodeURIComponent(result.qrData.authUrl)}`);
+                    const qrResult = await qrResponse.json();
+                    
+                    document.getElementById('qrCode').src = qrResult.qrDataUrl;
+                    document.getElementById('qrContainer').classList.remove('hidden');
+                    
+                    // Connect to WebSocket for this session
+                    if (websocket && websocket.readyState === WebSocket.OPEN) {
+                        websocket.send(JSON.stringify({
+                            type: 'join_session',
+                            sessionId: currentSessionId,
+                            deviceType: 'initiator'
+                        }));
+                    }
+                    
+                    updateStatus(result.hasUidaiOtp ? 
+                        '✓ QR code generated. OTP sent via UIDAI sandbox. Scan QR with mobile.' :
+                        '✓ QR code generated. Scan with mobile device to continue.', 'pending');
+                    
+                    // Start polling for status updates
+                    pollSessionStatus();
+                } else {
+                    updateStatus(`❌ Failed to start authentication: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error starting authentication:', error);
+                updateStatus(`❌ Network error: ${error.message}`, 'error');
+            } finally {
+                // Hide loading state
+                startButton.disabled = false;
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        async function pollSessionStatus() {
+            if (!currentSessionId) return;
+
+            try {
+                const response = await fetch(`/auth/cross-device/session/${currentSessionId}/status`);
+                const status = await response.json();
+                
+                console.log('📊 Session status:', status);
+                
+                if (status.status === 'completed') {
+                    updateStatus('✅ Authentication completed successfully!', 'success');
+                    showAuthResult(status);
+                    return; // Stop polling
+                } else if (status.status === 'failed') {
+                    updateStatus('❌ Authentication failed', 'error');
+                    return; // Stop polling
+                } else if (status.status === 'not_found') {
+                    updateStatus('❌ Session expired or not found', 'error');
+                    return; // Stop polling
+                }
+                
+                // Continue polling if still in progress
+                if (status.status === 'pending' || status.status === 'otp_sent' || status.status === 'authenticating') {
+                    setTimeout(pollSessionStatus, 2000); // Poll every 2 seconds
+                }
+            } catch (error) {
+                console.error('Error polling session status:', error);
+                setTimeout(pollSessionStatus, 5000); // Retry after 5 seconds
+            }
+        }
+
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function showAuthResult(data) {
+            document.getElementById('authResult').innerHTML = `
+                <strong>Authentication Result:</strong><br>
+                ${JSON.stringify(data, null, 2)}
+            `;
+            document.getElementById('resultContainer').classList.remove('hidden');
+        }
+
+        // Initialize WebSocket connection on page load
+        window.addEventListener('load', () => {
+            connectWebSocket();
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            if (websocket) {
+                websocket.close();
+            }
+        });
+    </script>
+</body>
+</html> 

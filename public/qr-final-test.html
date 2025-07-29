@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FINAL QR CODE TEST</title>
+    <style>
+        body { font-family: Arial; padding: 20px; text-align: center; background: #f0f0f0; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .qr-box { border: 3px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px 0; background: white; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .test-btn { background: #007bff; color: white; border: none; padding: 15px 30px; border-radius: 5px; font-size: 16px; cursor: pointer; margin: 10px; }
+        .test-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 FINAL QR CODE TEST</h1>
+        <p><strong>This test will absolutely prove QR codes work</strong></p>
+        
+        <button class="test-btn" onclick="testQR1()">Test QR Method 1 (QR Server)</button>
+        <button class="test-btn" onclick="testQR2()">Test QR Method 2 (Google Charts)</button>
+        <button class="test-btn" onclick="testQR3()">Test QR Method 3 (Canvas)</button>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <div class="qr-box">
+            <h3>QR CODE DISPLAY AREA</h3>
+            <div id="qrDisplay">Click a button above to generate QR code</div>
+        </div>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <script>
+        const testUrl = 'http://localhost:3002/auth/verify/sess_test12345';
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+        
+        function testQR1() {
+            showStatus('Testing QR Server API...', 'info');
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(testUrl)}`;
+            
+            document.getElementById('qrDisplay').innerHTML = `
+                <h4>QR Server API Test</h4>
+                <p>URL: <code style="font-size: 10px;">${qrUrl}</code></p>
+                <img src="${qrUrl}" 
+                     style="width: 200px; height: 200px; border: 2px solid #007bff; border-radius: 8px;"
+                     onload="showStatus('✅ QR Server API SUCCESS! QR code loaded perfectly!', 'success')"
+                     onerror="showStatus('❌ QR Server API FAILED! Image could not load.', 'error')">
+            `;
+        }
+        
+        function testQR2() {
+            showStatus('Testing Google Charts API...', 'info');
+            const qrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(testUrl)}`;
+            
+            document.getElementById('qrDisplay').innerHTML = `
+                <h4>Google Charts API Test</h4>
+                <p>URL: <code style="font-size: 10px;">${qrUrl}</code></p>
+                <img src="${qrUrl}" 
+                     style="width: 200px; height: 200px; border: 2px solid #28a745; border-radius: 8px;"
+                     onload="showStatus('✅ Google Charts API SUCCESS! QR code loaded perfectly!', 'success')"
+                     onerror="showStatus('❌ Google Charts API FAILED! Image could not load.', 'error')">
+            `;
+        }
+        
+        function testQR3() {
+            showStatus('Testing Canvas QR Generation...', 'info');
+            
+            if (typeof QRious === 'undefined') {
+                showStatus('❌ QRious library not loaded!', 'error');
+                return;
+            }
+            
+            document.getElementById('qrDisplay').innerHTML = `
+                <h4>Canvas QR Generation Test</h4>
+                <canvas id="testCanvas" style="width: 200px; height: 200px; border: 2px solid #dc3545; border-radius: 8px;"></canvas>
+            `;
+            
+            const canvas = document.getElementById('testCanvas');
+            
+            try {
+                const qr = new QRious({
+                    element: canvas,
+                    value: testUrl,
+                    size: 200,
+                    foreground: '#000000',
+                    background: '#FFFFFF'
+                });
+                showStatus('✅ Canvas QR SUCCESS! QR code generated perfectly with QRious!', 'success');
+            } catch (error) {
+                    showStatus(`❌ Canvas QR FAILED! Error: ${error.message}`, 'error');
+                }
+        }
+        
+        // Auto-test on page load
+        window.addEventListener('load', function() {
+            showStatus('Page loaded. QRious library available: ' + (typeof QRious !== 'undefined'), 'info');
+            setTimeout(testQR1, 1000);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Token Viewer - Aadhaar Authentication</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2563eb;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        .token-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .token-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .result-container {
+            display: none;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 24px;
+        }
+        
+        .details-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-row:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+        
+        .detail-label {
+            flex: 1;
+            font-weight: 500;
+            padding: 12px 16px;
+            color: #4b5563;
+        }
+        
+        .detail-value {
+            flex: 2;
+            padding: 12px 16px;
+        }
+        
+        .token-display {
+            background-color: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .token-text {
+            font-family: monospace;
+            word-break: break-all;
+            white-space: pre-wrap;
+            margin: 0;
+            padding-right: 40px;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .copy-button:hover {
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        
+        .error {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            color: #b91c1c;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .info-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+        }
+        
+        .payload-section {
+            margin-top: 30px;
+        }
+        
+        .payload-title {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .payload-json {
+            background-color: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid #10b981;
+            padding: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-icon {
+            margin-right: 12px;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>JWT Token Viewer</h1>
+            <p class="subtitle">Paste your JWT token to view it in a readable format</p>
+            
+            <div class="error" id="error-message"></div>
+            
+            <div class="input-container">
+                <textarea class="token-input" id="token-input" placeholder="Paste your JWT token here..."></textarea>
+            </div>
+            
+            <div class="button-container">
+                <button class="button" id="view-button">View Token</button>
+            </div>
+            
+            <div class="result-container" id="result-container">
+                <div class="success-icon">✓</div>
+                <h2>Authentication Token Details</h2>
+                
+                <div class="info-box">
+                    <p>This token verifies your Aadhaar authentication. The details extracted from the token are shown below.</p>
+                </div>
+                
+                <h3>Authentication Details</h3>
+                <div class="details-container" id="details-container">
+                    <!-- Will be populated with token details -->
+                </div>
+                
+                <h3>Raw Token</h3>
+                <div class="token-display">
+                    <pre class="token-text" id="token-display"></pre>
+                    <button class="copy-button" id="copy-button" title="Copy token">📋</button>
+                </div>
+                
+                <div class="payload-section">
+                    <div class="payload-title">Token Payload (Decoded):</div>
+                    <pre class="payload-json" id="payload-json"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">
+        <span class="toast-icon">✓</span>
+        <span id="toast-message">Token copied to clipboard!</span>
+    </div>
+    
+    <script>
+        // Parse JWT token
+        function parseJwt(token) {
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                    throw new Error('Invalid token format');
+                }
+                
+                const base64Url = parts[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                throw new Error('Failed to parse token: ' + e.message);
+            }
+        }
+        
+        // Format date from timestamp
+        function formatDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString();
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(
+                function() {
+                    showToast('Token copied to clipboard!');
+                },
+                function(err) {
+                    console.error('Failed to copy: ', err);
+                    showToast('Failed to copy token');
+                }
+            );
+        }
+        
+        // Display token details
+        function displayTokenDetails(token) {
+            try {
+                const payload = parseJwt(token);
+                const detailsContainer = document.getElementById('details-container');
+                const tokenDisplay = document.getElementById('token-display');
+                const payloadJson = document.getElementById('payload-json');
+                
+                // Clear previous content
+                detailsContainer.innerHTML = '';
+                
+                // Add token details rows
+                const details = [
+                    { label: 'Aadhaar UID', value: payload.sub || payload.uid || 'Not available' },
+                    { 
+                        label: 'Authentication Time', 
+                        value: payload.auth_time || payload.iat 
+                            ? formatDate(payload.auth_time || payload.iat) 
+                            : 'Not available'
+                    },
+                    { label: 'Transaction ID', value: payload.txn || payload.aadhaarTxn || 'Not available' },
+                    { 
+                        label: 'Token Expiry', 
+                        value: payload.exp ? formatDate(payload.exp) : 'Not available'
+                    },
+                    { label: 'Issuer', value: payload.iss || 'Not available' },
+                    { label: 'Audience', value: payload.aud || 'Not available' }
+                ];
+                
+                details.forEach((detail, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'detail-row';
+                    if (index % 2 === 0) {
+                        row.classList.add('even-row');
+                    }
+                    
+                    row.innerHTML = `
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    `;
+                    
+                    detailsContainer.appendChild(row);
+                });
+                
+                // Display the token
+                tokenDisplay.textContent = token;
+                
+                // Display the payload JSON
+                payloadJson.textContent = JSON.stringify(payload, null, 2);
+                
+                // Show the result container
+                document.getElementById('result-container').style.display = 'block';
+                
+                // Hide any error messages
+                document.getElementById('error-message').style.display = 'none';
+                
+                // Set up copy button
+                document.getElementById('copy-button').onclick = () => copyToClipboard(token);
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('result-container').style.display = 'none';
+        }
+        
+        // Handle view button click
+        document.getElementById('view-button').addEventListener('click', function() {
+            const token = document.getElementById('token-input').value.trim();
+            
+            if (!token) {
+                showError('Please enter a JWT token');
+                return;
+            }
+            
+            try {
+                displayTokenDetails(token);
+            } catch (error) {
+                showError('Invalid JWT token: ' + error.message);
+            }
+        });
+        
+        // Check URL parameters for token
+        function checkUrlForToken() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (token) {
+                document.getElementById('token-input').value = token;
+                displayTokenDetails(token);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', checkUrlForToken);
+    </script>
+</body>
+</html> 
