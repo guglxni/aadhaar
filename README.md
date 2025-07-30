@@ -109,7 +109,7 @@ The project includes **bulletproof automation** that:
 ### Webhook Integration
 
 Set environment variables for alerts:
-```bash
+    ```bash
 export WEBHOOK_SUCCESS_URL="https://hooks.slack.com/..."  # Green status
 export WEBHOOK_WARNING_URL="https://hooks.slack.com/..."  # Service outage
 export WEBHOOK_ERROR_URL="https://hooks.slack.com/..."    # Critical errors
@@ -117,7 +117,7 @@ export WEBHOOK_ERROR_URL="https://hooks.slack.com/..."    # Critical errors
 
 ## 🧪 **Testing**
 
-```bash
+    ```bash
 # Unit tests
 npm test
 
@@ -129,7 +129,7 @@ npm run test:e2e
 
 # Coverage report
 npm run test:cov
-```
+    ```
 
 ## 🚀 **Production Deployment**
 

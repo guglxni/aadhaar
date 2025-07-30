@@ -83,7 +83,7 @@ export class AuthController {
       
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
-          const qrData = await this.aadhaarProvider.initiateAuth(redirectUri, 'some-state', uid, correlationId);
+      const qrData = await this.aadhaarProvider.initiateAuth(redirectUri, 'some-state', uid, correlationId);
           
                      this.logger.audit(correlationId, 'QR_CODE_GENERATED_SUCCESS', { 
              uid: uid.substring(0, 4) + '****' + uid.substring(uid.length - 4),
@@ -92,7 +92,7 @@ export class AuthController {
              correlationId 
            });
           
-          return res.json(qrData);
+      return res.json(qrData);
         } catch (error) {
                      // Check if it's a UIDAI service unavailable error (998/A202)
            if (error instanceof HttpException && 

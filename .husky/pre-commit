@@ -1,11 +1,39 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+set -e
 
-# Prevent duplicate status files
-if git diff --cached --name-only | grep -E '^[^/]*STATUS.*\.md$' | grep -v '^STATUS\.md$'; then
-  echo "❌ ERROR: Found duplicate status file! Only STATUS.md is allowed at repo root."
-  echo "Use the automated status generator: npm run status:generate"
+echo "🔍 Pre-commit security scan..."
+
+# Get staged files
+FILES=$(git diff --cached --name-only)
+
+# Block secret-like files
+echo "$FILES" | grep -E '\.(key|pem|p12|cer)$|(^|/)certs/' && {
+  echo "❌ Secret-like file staged. Move to secret store."
   exit 1
-fi
+}
 
-echo "✅ Pre-commit status check passed" 
+# Block build outputs
+echo "$FILES" | grep -E '(^|/)node_modules/|(^|/)dist/' && {
+  echo "❌ Build output staged. Fix .gitignore."
+  exit 1
+}
+
+# Block env files (except .env.example)
+echo "$FILES" | grep -E '\.env($|\.[^/]*$)' | grep -v '\.env\.example$' && {
+  echo "❌ Environment file staged. Use .env.example template."
+  exit 1
+}
+
+# Block duplicate status files
+echo "$FILES" | grep -E '^[^/]*STATUS.*\.md$' | grep -v '^STATUS\.md$' && {
+  echo "❌ Duplicate status file. Only STATUS.md is allowed (auto-generated)."
+  exit 1
+}
+
+# Block large binaries/archives
+echo "$FILES" | grep -E '\.(zip|jar|class|p12|bin)$' && {
+  echo "❌ Binary file staged. Use external storage."
+  exit 1
+}
+
+echo "✅ Pre-commit security scan passed"
