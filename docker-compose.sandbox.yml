@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  uidai-auth:
+    build: 
+      context: .
+      dockerfile: Dockerfile.sandbox
+    container_name: uidai-sandbox-auth
+    environment:
+      # Application
+      NODE_ENV: sandbox
+      PORT: 3002
+      LOG_LEVEL: debug
+      
+      # UIDAI Configuration (loaded from secrets)
+      UIDAI_ENDPOINT: "https://developer.uidai.gov.in"
+      UIDAI_PFX_B64: ${UIDAI_PFX_B64}
+      UIDAI_PFX_PASS: ${UIDAI_PFX_PASS}
+      UIDAI_LICENSE_KEY: ${UIDAI_LICENSE_KEY}
+      UIDAI_ASA_LICENSE_KEY: ${UIDAI_ASA_LICENSE_KEY}
+      UIDAI_AUA_CODE: ${UIDAI_AUA_CODE}
+      
+      # Security & Monitoring
+      CORRELATION_ID_HEADER: x-correlation-id
+      ENABLE_TRANSACTION_LOGGING: "true"
+      SANDBOX_ARTIFACTS_PATH: "/sandbox-artifacts"
+      
+    volumes:
+      # Transaction artifacts (outside container for audit)
+      - ./sandbox-artifacts:/sandbox-artifacts
+      # Certificates (read-only, loaded from secrets)
+      - uidai-certs:/app/certs:ro
+      
+    ports:
+      - "3002:3002"
+      
+    networks:
+      - uidai-egress
+      - internal
+      
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      
+    # Security constraints
+    security_opt:
+      - no-new-privileges:true
+    read_only: false  # Need write for artifacts
+    user: "1000:1000"
+    
+    depends_on:
+      - cert-loader
+
+  # Certificate loader (loads P12 from secrets)
+  cert-loader:
+    image: alpine:latest
+    container_name: uidai-cert-loader
+    environment:
+      UIDAI_PFX_B64: ${UIDAI_PFX_B64}
+      UIDAI_PFX_PASS: ${UIDAI_PFX_PASS}
+    volumes:
+      - uidai-certs:/certs
+    command: |
+      sh -c '
+        echo "Loading UIDAI certificates from secrets..."
+        if [ -z "$$UIDAI_PFX_B64" ]; then
+          echo "ERROR: UIDAI_PFX_B64 not set"
+          exit 1
+        fi
+        
+        # Decode P12 from base64
+        echo $$UIDAI_PFX_B64 | base64 -d > /certs/uidai.p12
+        
+        # Extract certificate and key (for xmlsec1 compatibility)
+        apk add --no-cache openssl
+        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.pem -nodes -passin pass:$$UIDAI_PFX_PASS
+        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.key -nocerts -nodes -passin pass:$$UIDAI_PFX_PASS
+        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.crt -clcerts -nokeys -passin pass:$$UIDAI_PFX_PASS
+        
+        # Download UIDAI staging CA (for signature verification)
+        wget -O /certs/uidai_auth_stage.cer https://developer.uidai.gov.in/assets/cert/AuthStaging25082025.cer || echo "CA download failed - manual setup required"
+        
+        chmod 600 /certs/*
+        echo "Certificate loading complete"
+        sleep 10  # Keep container alive briefly
+      '
+    restart: "no"
+
+networks:
+  # Egress network for UIDAI communication (should map to static IP)
+  uidai-egress:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    # In production: configure NAT gateway with static IP here
+    
+  # Internal network for service communication
+  internal:
+    driver: bridge
+    internal: true
+
+volumes:
+  # Certificate storage (ephemeral, loaded from secrets)
+  uidai-certs:
+    driver: local 

@@ -1,0 +1,53 @@
+FROM node:18-alpine AS base
+
+# Install system dependencies for UIDAI compliance
+RUN apk add --no-cache \
+    xmlsec \
+    openssl \
+    curl \
+    bash \
+    && rm -rf /var/cache/apk/*
+
+# Create non-root user for security
+RUN addgroup -g 1000 -S uidai && \
+    adduser -u 1000 -S uidai -G uidai
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copy application code
+COPY --chown=uidai:uidai . .
+
+# Create directories for UIDAI compliance
+RUN mkdir -p /sandbox-artifacts /app/certs /tmp && \
+    chown -R uidai:uidai /sandbox-artifacts /app/certs /tmp
+
+# Build the application
+RUN npm run build
+
+# Remove dev dependencies and source files to minimize attack surface
+RUN rm -rf src/ test/ tests/ node_modules/.cache/
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:3002/health || exit 1
+
+# Switch to non-root user
+USER uidai
+
+# Expose port
+EXPOSE 3002
+
+# Environment for sandbox mode
+ENV NODE_ENV=sandbox
+ENV LOG_LEVEL=debug
+ENV ENABLE_TRANSACTION_LOGGING=true
+
+# Start command
+CMD ["npm", "run", "start:prod"] 
