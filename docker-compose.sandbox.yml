@@ -56,7 +56,7 @@ services:
     depends_on:
       - cert-loader
 
-  # Certificate loader (loads P12 from secrets)
+  # Certificate loader (secure P12 handling with tmpfs)
   cert-loader:
     image: alpine:latest
     container_name: uidai-cert-loader
@@ -65,29 +65,61 @@ services:
       UIDAI_PFX_PASS: ${UIDAI_PFX_PASS}
     volumes:
       - uidai-certs:/certs
+    tmpfs:
+      - /tmp:noexec,nosuid,size=10m  # tmpfs for secure P12 handling
     command: |
       sh -c '
-        echo "Loading UIDAI certificates from secrets..."
+        echo "🔐 Loading UIDAI certificates securely..."
         if [ -z "$$UIDAI_PFX_B64" ]; then
-          echo "ERROR: UIDAI_PFX_B64 not set"
+          echo "❌ ERROR: UIDAI_PFX_B64 not set"
           exit 1
         fi
         
-        # Decode P12 from base64
-        echo $$UIDAI_PFX_B64 | base64 -d > /certs/uidai.p12
+        # Install required tools
+        apk add --no-cache openssl ca-certificates curl
         
-        # Extract certificate and key (for xmlsec1 compatibility)
-        apk add --no-cache openssl
-        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.pem -nodes -passin pass:$$UIDAI_PFX_PASS
-        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.key -nocerts -nodes -passin pass:$$UIDAI_PFX_PASS
-        openssl pkcs12 -in /certs/uidai.p12 -out /certs/aua.crt -clcerts -nokeys -passin pass:$$UIDAI_PFX_PASS
+        # Decode P12 to tmpfs (vanishes on container stop)
+        echo $$UIDAI_PFX_B64 | base64 -d > /tmp/aua.p12
+        chmod 0400 /tmp/aua.p12
         
-        # Download UIDAI staging CA (for signature verification)
-        wget -O /certs/uidai_auth_stage.cer https://developer.uidai.gov.in/assets/cert/AuthStaging25082025.cer || echo "CA download failed - manual setup required"
+        # Extract components for xmlsec1 compatibility
+        openssl pkcs12 -in /tmp/aua.p12 -out /certs/aua.pem -nodes -passin pass:$$UIDAI_PFX_PASS
+        openssl pkcs12 -in /tmp/aua.p12 -out /certs/aua.key -nocerts -nodes -passin pass:$$UIDAI_PFX_PASS
+        openssl pkcs12 -in /tmp/aua.p12 -out /certs/aua.crt -clcerts -nokeys -passin pass:$$UIDAI_PFX_PASS
         
+        # Download AuthStaging25082025.cer (expires in 25 days - monitor!)
+        echo "📥 Downloading UIDAI staging CA..."
+        curl -f -o /certs/uidai_auth_stage.cer https://developer.uidai.gov.in/assets/cert/AuthStaging25082025.cer || {
+          echo "⚠️ CA download failed - using local copy if available"
+        }
+        
+        # Install staging CA in system trust store
+        cp /certs/uidai_auth_stage.cer /usr/local/share/ca-certificates/uidai_staging.crt
+        update-ca-certificates
+        
+        # Verify certificate chain
+        echo "🔍 Verifying certificate chain..."
+        if openssl verify -CAfile /certs/uidai_auth_stage.cer /certs/aua.crt; then
+          echo "✅ Certificate chain verified"
+        else
+          echo "❌ Certificate chain verification failed"
+          exit 1
+        fi
+        
+        # Generate certificate fingerprint for audit
+        CERT_FINGERPRINT=$(openssl x509 -in /certs/aua.crt -noout -sha256 -fingerprint | cut -d= -f2)
+        echo "📊 AUA Certificate SHA-256: $CERT_FINGERPRINT"
+        echo "$CERT_FINGERPRINT" > /certs/aua_fingerprint.txt
+        
+        # Secure permissions
         chmod 600 /certs/*
-        echo "Certificate loading complete"
-        sleep 10  # Keep container alive briefly
+        chmod 644 /certs/uidai_auth_stage.cer /certs/aua_fingerprint.txt
+        
+        # Remove P12 from tmpfs (security)
+        rm -f /tmp/aua.p12
+        
+        echo "🔐 Certificate loading complete and secure"
+        sleep 15  # Keep container alive briefly for volume sync
       '
     restart: "no"
 

@@ -25,6 +25,8 @@
     "sandbox:up": "docker-compose -f docker-compose.sandbox.yml up -d",
     "sandbox:down": "docker-compose -f docker-compose.sandbox.yml down",
     "sandbox:logs": "docker-compose -f docker-compose.sandbox.yml logs -f",
+    "cert:monitor": "./scripts/monitor-uidai-ca.sh",
+    "cert:archive": "./scripts/archive-certificates.sh",
     "status:generate": "node scripts/status-generator.js",
     "status:check": "./scripts/ci-status-check.sh",
     "ci:status": "npm run status:check"
