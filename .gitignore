@@ -42,3 +42,16 @@ status-badge/
 .idea/
 *.swp
 *.swo
+
+
+# IDE & Development Tools
+.cursorignore
+.cursorindexingignore
+.specstory/
+
+# Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
