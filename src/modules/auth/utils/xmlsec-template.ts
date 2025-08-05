@@ -12,7 +12,7 @@ export function wrapWithTemplate(xml: string): string {
   }
 
   // 2. inject an empty <Signature/> right after root start-tag
-  const [, openTag, rest] = xml.match(/^(\s*<[^>]+>)([\s\S]+)/)!;
+  const [, openTag, rest] = xml.match(/^(\s*<[^>]+>)([\s\S]+)/);
   return `${openTag}
 <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
   <SignedInfo>
