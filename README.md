@@ -159,6 +159,7 @@ aadhaar/
 ### **🔧 Technical Documentation**
 - **[API Documentation](./docs/api/UIDAI_ERROR_HANDLING_IMPLEMENTATION.md)** - Complete API reference and error codes
 - **[Security Report](./docs/security/SECURITY.md)** - Security compliance and audit results
+- **[Certificate Setup Guide](./docs/CERTIFICATE_SETUP_GUIDE.md)** - Secure certificate configuration for evaluators
 - **[Environment Setup](./config/.env.example)** - Required environment variables
 - **[Docker Deployment](./config/docker-compose.sandbox.yml)** - Containerized setup guide
 
