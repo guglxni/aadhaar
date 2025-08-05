@@ -1,1 +1,0 @@
-{"statusCode":400,"timestamp":"2025-07-18T02:56:26.420Z","path":"/auth/qr?uid=999999990019&redirectUri=http://localhost:3002/callback","correlationId":"3d3a338b-2cce-42eb-9491-fa847035dbea","error":"Aadhaar OTP initiation failed: Error 569"}

@@ -17,6 +17,8 @@ import { AuditLogger } from '../../../common/logging/audit-logger.service';
 import { VerifyAuthDto } from '../dto/verify-auth.dto';
 import * as path from 'path';
 import * as forge from 'node-forge'; // Added for P12 certificate handling
+import { UidaiErrorProcessorService } from '../services/uidai-error-processor.service';
+import { UidaiErrorContext, ProcessedUidaiError } from '../interfaces/uidai-error.interface';
 
 @Injectable()
 export class AadhaarProvider implements EidProvider {
@@ -50,6 +52,7 @@ export class AadhaarProvider implements EidProvider {
   constructor(
     private configService: ConfigService,
     private readonly logger: AuditLogger,
+    private readonly uidaiErrorProcessor: UidaiErrorProcessorService
   ) {
     const initCorrelationId = uuidv4();
     this.logger.audit(initCorrelationId, 'PROVIDER_INITIALIZATION_START', {});
@@ -681,6 +684,71 @@ export class AadhaarProvider implements EidProvider {
     } catch (error) {
       this.logger.warn('Failed to save latest response:', error.message);
     }
+  }
+
+  /**
+   * Process UIDAI error using comprehensive error handling system
+   */
+  private processUidaiError(
+    errorCode: string,
+    actionCode: string | undefined,
+    transactionId: string | undefined,
+    originalResponse: any,
+    correlationId: string,
+    userContext?: { uid?: string; sessionId?: string }
+  ): ProcessedUidaiError {
+    const errorContext: UidaiErrorContext = {
+      errorCode,
+      actionCode,
+      transactionId,
+      timestamp: new Date().toISOString(),
+      correlationId,
+      originalResponse,
+      userContext
+    };
+
+    return this.uidaiErrorProcessor.processError(errorContext);
+  }
+
+  /**
+   * Create HTTP exception from processed UIDAI error
+   */
+  private createHttpExceptionFromUidaiError(processedError: ProcessedUidaiError): HttpException {
+    const { definition, recommendation } = processedError;
+    
+    // Determine HTTP status code based on error category and severity
+    let statusCode = HttpStatus.BAD_REQUEST;
+    
+    if (definition.category === 'service_outage') {
+      statusCode = HttpStatus.SERVICE_UNAVAILABLE;
+    } else if (definition.category === 'authorization_issue' || definition.category === 'license_issue') {
+      statusCode = HttpStatus.UNAUTHORIZED;
+    } else if (definition.category === 'technical_issue' && !definition.isClientSideIssue) {
+      statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+    const errorResponse = {
+      message: definition.userMessage,
+      instructions: definition.userInstructions,
+      errorCode: definition.code,
+      actionCode: definition.actionCode,
+      category: definition.category,
+      severity: definition.severity,
+      isRetryable: definition.isRetryable,
+      recommendation: {
+        primaryAction: recommendation.primaryAction,
+        showRetryButton: recommendation.showRetryButton,
+        showContactSupport: recommendation.showContactSupport,
+        retryAfterSeconds: recommendation.retryAfterSeconds,
+        additionalHelp: recommendation.additionalHelp
+      },
+      technicalDetails: recommendation.showTechnicalDetails ? {
+        technicalMessage: definition.technicalMessage,
+        probableReasons: definition.probableReasons
+      } : undefined
+    };
+
+    return new HttpException(errorResponse, statusCode);
   }
 
   /**

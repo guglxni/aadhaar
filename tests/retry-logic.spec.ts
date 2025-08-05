@@ -2,7 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { AuthController } from '../src/modules/auth/auth.controller';
 import { AadhaarProvider } from '../src/modules/auth/providers/aadhaar.provider';
+import { AuthService } from '../src/modules/auth/services/auth.service';
 import { AuditLogger } from '../src/common/logging/audit-logger.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('Error 998/A202 Retry Logic', () => {
   let authController: AuthController;
@@ -64,6 +66,21 @@ describe('Error 998/A202 Retry Logic', () => {
       providers: [
         { provide: AadhaarProvider, useValue: mockAadhaarProvider },
         { provide: AuditLogger, useValue: mockLogger },
+        { 
+          provide: AuthService, 
+          useValue: {
+            // Mock AuthService methods if needed
+            createSession: jest.fn(),
+            getSession: jest.fn(),
+          }
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue('test-value'),
+            getOrThrow: jest.fn().mockReturnValue('test-value'),
+          }
+        }
       ],
     }).compile();
 

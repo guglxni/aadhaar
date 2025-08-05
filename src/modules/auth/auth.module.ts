@@ -9,6 +9,8 @@ import { CrossDeviceGateway } from './gateways/cross-device.gateway';
 import { AuditLogger } from '../../common/logging/audit-logger.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UidaiErrorRegistryService } from './services/uidai-error-registry.service';
+import { UidaiErrorProcessorService } from './services/uidai-error-processor.service';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     CrossDeviceUidaiProvider,
     CrossDeviceGateway,
     AuditLogger,
+    UidaiErrorRegistryService,
+    UidaiErrorProcessorService,
   ],
   exports: [
     AuthService, 
