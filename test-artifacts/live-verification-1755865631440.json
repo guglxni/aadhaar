@@ -1,0 +1,58 @@
+{
+  "suiteStartTime": "2025-08-22T12:27:11.439Z",
+  "totalTests": 4,
+  "passed": 2,
+  "failed": 2,
+  "testResults": [
+    {
+      "testName": "server-health-check",
+      "timestamp": "2025-08-22T12:27:11.056Z",
+      "status": "FAILED",
+      "duration": 23,
+      "error": "expected 200 \"OK\", got 404 \"Not Found\""
+    },
+    {
+      "testName": "uidai-config-check",
+      "timestamp": "2025-08-22T12:27:11.079Z",
+      "status": "PASSED",
+      "duration": 6
+    },
+    {
+      "testName": "live-otp-generation",
+      "timestamp": "2025-08-22T12:27:11.085Z",
+      "status": "PASSED",
+      "duration": 179
+    },
+    {
+      "testName": "invalid-uid-handling",
+      "timestamp": "2025-08-22T12:27:11.264Z",
+      "status": "FAILED",
+      "duration": 174,
+      "error": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m"
+    }
+  ],
+  "uidaiResponses": [
+    {
+      "timestamp": "2025-08-22T12:27:11.264Z",
+      "endpoint": "/auth/qr",
+      "uid": "999999990019",
+      "status": 200,
+      "body": {
+        "success": true,
+        "qrDataUrl": "data:image/png;base64,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",
+        "authUrl": "http://localhost:3002/auth/verify/sess_5urcun1wv_memt27w0?uid=999999990019&redirectUri=http%3A%2F%2Flocalhost%3A3003%2Fcallback",
+        "txnId": "qr-txn-sess_5urcun1wv_memt27w0-1755865631261",
+        "sessionId": "sess_5urcun1wv_memt27w0",
+        "expiresIn": 300,
+        "message": "QR code generated successfully",
+        "instructions": {
+          "step1": "Scan this QR code with your mobile device",
+          "step2": "Enter the OTP sent to your registered mobile number",
+          "step3": "Complete authentication on your mobile device"
+        }
+      },
+      "responseTime": 177
+    }
+  ],
+  "errorAnalysis": []
+}

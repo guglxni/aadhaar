@@ -4,385 +4,305 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication Successful - Aadhaar Verification</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: hsl(240 10% 3.9%);
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: hsl(0 0% 100%);
-        }
-        
-        .card {
-            border-radius: 0.5rem;
-            border: 1px solid hsl(240 5.9% 90%);
-            background-color: hsl(0 0% 100%);
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background-color: hsl(142.1 76.2% 36.3% / 0.1);
-            color: hsl(142.1 76.2% 36.3%);
-            border-radius: 50%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            margin: 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: checkmarkBounce 0.6s ease-out;
+        }
+        
+        .checkmark i {
+            color: white;
             font-size: 2.5rem;
-            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes checkmarkBounce {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .token-display {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-family: monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            color: #475569;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.375rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition-property: color, background-color, border-color;
-            transition-duration: 150ms;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
         }
         
         .btn-primary {
-            background-color: hsl(222.2 47.4% 11.2%);
-            color: hsl(210 40% 98%);
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
         }
         
         .btn-primary:hover {
-            background-color: hsl(217.2 32.6% 17.5%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
         }
         
-        .data-row {
-            display: flex;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid hsl(240 5.9% 90%);
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
         }
         
-        .data-row:last-child {
-            border-bottom: none;
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
         }
         
-        .data-label {
-            flex: 1;
-            font-weight: 500;
-            color: hsl(240 3.8% 46.1%);
+        .user-info {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
         }
         
-        .data-value {
-            flex: 2;
-            font-weight: 500;
+        .user-info h3 {
+            color: #5b21b6;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
         }
         
-        .token-container {
-            background-color: hsl(210 40% 96.1%);
-            border-radius: 0.375rem;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            position: relative;
-            overflow: hidden;
+        .user-info p {
+            margin: 0.5rem 0;
+            color: #6b46c1;
         }
         
-        .token-text {
-            font-family: monospace;
+        .timestamp {
+            color: #64748b;
             font-size: 0.875rem;
-            word-break: break-all;
-            white-space: pre-wrap;
-            color: hsl(240 5.9% 26%);
-            max-height: 150px;
-            overflow-y: auto;
+            margin-top: 1rem;
         }
         
-        .copy-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background-color: white;
-            border: 1px solid hsl(240 5.9% 90%);
-            border-radius: 0.25rem;
-            width: 2rem;
-            height: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: hsl(240 3.8% 46.1%);
-            transition: background-color 0.15s, color 0.15s;
-        }
-        
-        .copy-btn:hover {
-            background-color: hsl(210 40% 96.1%);
-            color: hsl(222.2 47.4% 11.2%);
-        }
-        
-        .toast {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            display: flex;
+        .security-note {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
             padding: 1rem;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 50;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            transform: translateY(100%);
-            max-width: 350px;
-            align-items: center;
-            border-left: 4px solid hsl(142.1 76.2% 36.3%);
-        }
-        
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .toast-icon {
-            margin-right: 0.75rem;
-            font-size: 1.25rem;
-            color: hsl(142.1 76.2% 36.3%);
+            margin-top: 2rem;
+            color: #92400e;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-    <div class="card mt-8">
-        <div class="success-icon">
-            <i class="fa-solid fa-check"></i>
+    <div class="success-card">
+        <div class="checkmark">
+            <i class="fas fa-check"></i>
         </div>
         
-        <h1 class="text-2xl font-bold text-center mb-2">Authentication Successful</h1>
-        <p class="text-center text-gray-600 mb-6">Your Aadhaar identity has been verified successfully</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Authentication Successful!</h1>
+        <p class="text-gray-600 mb-6">Your Aadhaar identity has been successfully verified.</p>
         
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <i class="fa-solid fa-circle-info text-green-600"></i>
+        <div id="userInfo" class="user-info" style="display: none;">
+            <h3><i class="fas fa-user mr-2"></i>Verified Information</h3>
+            <p><strong>Name:</strong> <span id="userName">-</span></p>
+            <p><strong>UID:</strong> <span id="userUid">-</span></p>
+            <p><strong>Verification Method:</strong> Aadhaar OTP</p>
+            <p><strong>Status:</strong> <span class="text-green-600 font-semibold">Verified ✓</span></p>
+        </div>
+        
+        <div id="tokenSection" style="display: none;">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Authentication Token</h3>
+            <div class="token-display">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs text-gray-500">JWT Token:</span>
+                    <button id="copyBtn" class="text-xs text-blue-600 hover:text-blue-800" onclick="copyToken()">
+                        <i class="fas fa-copy mr-1"></i>Copy
+                    </button>
                 </div>
-                <div class="ml-3">
-                    <p class="text-sm text-green-700">Your authentication token has been generated. This token can be used to access secure services.</p>
-                </div>
+                <div id="tokenValue" class="text-sm"></div>
             </div>
         </div>
         
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold mb-3">Authentication Details</h2>
-            <div class="border rounded-md overflow-hidden">
-                <div class="data-row bg-gray-50">
-                    <div class="data-label px-4">Aadhaar UID</div>
-                    <div class="data-value px-4" id="uid-display">Loading...</div>
-                </div>
-                <div class="data-row">
-                    <div class="data-label px-4">Authentication Time</div>
-                    <div class="data-value px-4" id="auth-time-display">Loading...</div>
-                </div>
-                <div class="data-row bg-gray-50">
-                    <div class="data-label px-4">Transaction ID</div>
-                    <div class="data-value px-4" id="txn-display">Loading...</div>
-                </div>
-                <div class="data-row">
-                    <div class="data-label px-4">Token Expiry</div>
-                    <div class="data-value px-4" id="expiry-display">Loading...</div>
-                </div>
-            </div>
-        </div>
+        <div class="timestamp" id="timestamp"></div>
         
-        <div class="mb-4">
-            <h2 class="text-lg font-semibold mb-2">Authentication Token</h2>
-            <p class="text-sm text-gray-600 mb-3">This token verifies your Aadhaar authentication. It may be required by some applications.</p>
-            <div class="token-container">
-                <pre class="token-text" id="token-display">Loading token data...</pre>
-                <button class="copy-btn" id="copy-token-btn" title="Copy token">
-                    <i class="fa-regular fa-copy"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="flex justify-center mt-6">
+        <div class="flex flex-wrap justify-center mt-6">
             <a href="/" class="btn btn-primary">
-                <i class="fa-solid fa-house mr-2"></i> Return to Home
+                <i class="fas fa-home mr-2"></i>Return to Home
             </a>
+            <button onclick="startNewAuth()" class="btn btn-secondary">
+                <i class="fas fa-redo mr-2"></i>New Authentication
+            </button>
+        </div>
+        
+        <div class="security-note">
+            <i class="fas fa-shield-alt mr-2"></i>
+            <strong>Security Notice:</strong> This authentication token is valid for this session only. 
+            Do not share this token with unauthorized parties.
         </div>
     </div>
-    
-    <div id="toast" class="toast">
-        <i class="fa-solid fa-check-circle toast-icon"></i>
-        <div>Token copied to clipboard</div>
-    </div>
-    
+
     <script>
-        // Parse JWT token
-        function parseJwt(token) {
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (e) {
-                console.error('Error parsing JWT:', e);
-                return null;
-            }
-        }
-        
-        // Format date from timestamp
-        function formatDate(timestamp) {
-            const date = new Date(timestamp * 1000);
-            return date.toLocaleString();
-        }
-        
-        // Show toast notification
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+        // Parse URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                token: params.get('token'),
+                uid: params.get('uid'),
+                name: params.get('name') || 'Verified User',
+                timestamp: params.get('timestamp')
+            };
         }
         
         // Copy token to clipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast();
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
+        function copyToken() {
+            const tokenValue = document.getElementById('tokenValue').textContent;
+            navigator.clipboard.writeText(tokenValue).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                copyBtn.style.color = '#10b981';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.color = '#2563eb';
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy token to clipboard');
             });
         }
         
-        // Get URL parameters
-        function getUrlParams() {
-            const params = {};
-            window.location.search.substring(1).split('&').forEach(item => {
-                const parts = item.split('=');
-                if (parts.length === 2) {
-                    params[parts[0]] = decodeURIComponent(parts[1]);
-                }
-            });
-            return params;
+        // Start new authentication
+        function startNewAuth() {
+            // Clear any existing session data
+            sessionStorage.clear();
+            localStorage.removeItem('authToken');
+            
+            // Redirect to home page
+            window.location.href = '/';
         }
         
-        // Initialize page with token data
-        function initPage() {
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
             const params = getUrlParams();
             
-            // Check if there's an error parameter
-            if (params.error) {
-                // Show error message
-                document.body.innerHTML = `
-                    <div class="card mt-8">
-                        <div class="text-center text-red-500 mb-4">
-                            <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
-                        </div>
-                        <h1 class="text-2xl font-bold text-center mb-4">Authentication Failed</h1>
-                        <p class="text-center text-gray-600 mb-4">Your Aadhaar identity could not be verified</p>
-                        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-circle-exclamation text-red-600"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">${params.error}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex justify-center">
-                            <a href="/" class="btn btn-primary">
-                                <i class="fa-solid fa-rotate mr-2"></i> Try Again
-                            </a>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+            // Set timestamp
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                'Verified on ' + now.toLocaleDateString() + ' at ' + now.toLocaleTimeString();
             
-            let token;
-            
-            // Try to get token from URL parameters
+            // Show token if provided
             if (params.token) {
-                token = params.token;
-            } else {
-                // If not in URL, try to get the raw response body
-                const bodyText = document.body.textContent.trim();
-                if (bodyText.includes('.') && bodyText.split('.').length === 3) {
-                    token = bodyText;
+                document.getElementById('tokenSection').style.display = 'block';
+                document.getElementById('tokenValue').textContent = params.token;
+                
+                // Store token for use by parent application
+                if (window.opener) {
+                    window.opener.postMessage({
+                        type: 'aadhaar_auth_success',
+                        token: params.token,
+                        uid: params.uid,
+                        name: params.name,
+                        timestamp: now.toISOString()
+                    }, '*');
                 }
             }
             
-            if (token) {
-                const tokenDisplay = document.getElementById('token-display');
-                const uidDisplay = document.getElementById('uid-display');
-                const authTimeDisplay = document.getElementById('auth-time-display');
-                const txnDisplay = document.getElementById('txn-display');
-                const expiryDisplay = document.getElementById('expiry-display');
-                const copyBtn = document.getElementById('copy-token-btn');
-                
-                // Set token display
-                tokenDisplay.textContent = token;
-                
-                // Parse and display token data
-                const payload = parseJwt(token);
-                if (payload) {
-                    // Display UID (sub claim)
-                    uidDisplay.textContent = payload.sub || payload.uid || 'Not available';
-                    
-                    // Display auth time
-                    if (payload.auth_time || payload.iat) {
-                        authTimeDisplay.textContent = formatDate(payload.auth_time || payload.iat);
-                    } else {
-                        authTimeDisplay.textContent = 'Not available';
-                    }
-                    
-                    // Display transaction ID
-                    txnDisplay.textContent = payload.txn || payload.aadhaarTxn || payload.uidaiTxn || 'Not available';
-                    
-                    // Display expiry
-                    if (payload.exp) {
-                        expiryDisplay.textContent = formatDate(payload.exp);
-                    } else {
-                        expiryDisplay.textContent = 'Not available';
-                    }
-                } else {
-                    uidDisplay.textContent = 'Could not parse token';
-                    authTimeDisplay.textContent = 'Could not parse token';
-                    txnDisplay.textContent = 'Could not parse token';
-                    expiryDisplay.textContent = 'Could not parse token';
-                }
-                
-                // Set up copy button
-                copyBtn.addEventListener('click', () => {
-                    copyToClipboard(token);
-                });
-            } else {
-                // No token found, show error
-                document.body.innerHTML = `
-                    <div class="card mt-8">
-                        <div class="text-center text-red-500 mb-4">
-                            <i class="fa-solid fa-triangle-exclamation text-5xl"></i>
-                        </div>
-                        <h1 class="text-2xl font-bold text-center mb-4">Token Not Found</h1>
-                        <p class="text-center text-gray-600 mb-6">No authentication token was found in the response</p>
-                        <div class="flex justify-center">
-                            <a href="/" class="btn btn-primary">Return to Home</a>
-                        </div>
-                    </div>
-                `;
+            // Show user info if available
+            if (params.uid) {
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('userName').textContent = params.name;
+                document.getElementById('userUid').textContent = 
+                    params.uid.substring(0, 4) + '••••' + params.uid.substring(10);
             }
-        }
+            
+            // Auto-redirect after 30 seconds if opened in popup
+            if (window.opener) {
+                setTimeout(() => {
+                    window.close();
+                }, 30000);
+            }
+            
+            // Handle postMessage for integration
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'request_auth_result') {
+                    event.source.postMessage({
+                        type: 'aadhaar_auth_result',
+                        success: true,
+                        token: params.token,
+                        uid: params.uid,
+                        name: params.name,
+                        timestamp: now.toISOString()
+                    }, event.origin);
+                }
+            });
+            
+            // Animate success elements
+            setTimeout(() => {
+                document.querySelector('.success-card').style.transform = 'scale(1)';
+                document.querySelector('.success-card').style.opacity = '1';
+            }, 100);
+        });
         
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initPage);
+        // Handle browser back button
+        window.addEventListener('popstate', function() {
+            window.location.href = '/';
+        });
     </script>
 </body>
-</html> 
+</html>

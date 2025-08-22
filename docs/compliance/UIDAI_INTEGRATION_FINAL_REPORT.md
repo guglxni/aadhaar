@@ -519,6 +519,5 @@ This behavior **validates the production readiness** of the integration and demo
 
 ---
 
-*Report Generated: August 5, 2025*  
-*Integration Team: Aadhaar eID Development*  
+*Report Generated: August 5, 2025*    
 *Review Status: Ready for Milestone B Approval* 

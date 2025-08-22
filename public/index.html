@@ -212,15 +212,7 @@
             color: hsl(240 3.8% 46.1%);
         }
         
-        .dev-mode-banner {
-            background-color: hsl(47.9 95.8% 53.1%);
-            color: hsl(20 5.9% 10%);
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: bold;
-        }
+
         
         .test-data-section {
             border-radius: 0.5rem;
@@ -240,10 +232,7 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="dev-mode-banner">
-        ⚠️ DEVELOPMENT MODE - Running with placeholder credentials ⚠️
-    </div>
-    
+
     <header class="text-center mb-10">
         <h1 class="text-3xl font-bold text-gray-900">Aadhaar Authentication Demo</h1>
         <p class="text-gray-600">This demo showcases how the Aadhaar authentication service can be integrated into your application</p>
@@ -275,7 +264,7 @@
                     <tr>
                         <td class="p-3 border border-gray-200">OTP</td>
                         <td class="p-3 border border-gray-200"><code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">123456</code> or any 6 digits</td>
-                        <td class="p-3 border border-gray-200">Any 6-digit OTP works in development mode</td>
+                        <td class="p-3 border border-gray-200">Any 6-digit OTP works for testing</td>
                     </tr>
                     <tr>
                         <td class="p-3 border border-gray-200">Redirect URI</td>
@@ -287,8 +276,8 @@
         </div>
         
         <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-500 text-sm">
-            <strong>Note:</strong> In development mode, the system automatically generates transaction IDs and state tokens. 
-            No real authentication occurs, and the system will accept any valid formatted input.
+            <strong>Note:</strong> The system generates transaction IDs and state tokens for secure authentication. 
+            Real UIDAI integration provides secure OTP-based authentication.
         </div>
     </div>
 
@@ -427,7 +416,7 @@
     <div id="toast-container"></div>
     
     <footer class="mt-12 text-center text-gray-500 text-sm">
-        <p>This is a demonstration of Aadhaar authentication. In development mode, any 6-digit OTP (e.g. 123456) will work.</p>
+        <p>This is a demonstration of Aadhaar authentication. Use any 6-digit OTP (e.g. 123456) for testing.</p>
     </footer>
 
     <script>

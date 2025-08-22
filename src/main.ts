@@ -103,6 +103,15 @@ async function bootstrap() {
     const port = process.env.PORT || 3002;
     const host = '0.0.0.0'; // Listen on all available network interfaces
     
+    // Log environment variables for debugging
+    logger.log(`Environment Configuration:
+      - NODE_ENV: ${process.env.NODE_ENV}
+      - PORT: ${port}
+      - SERVER_BASE_URL: ${process.env.SERVER_BASE_URL || 'http://localhost:' + port}
+      - AUA_CODE: ${process.env.AUA_CODE || 'public'}
+      - Certificate paths configured: ${process.env.AUA_P12_PATH ? 'Yes' : 'No'}
+    `);
+    
     logger.log(`Attempting to listen on ${host}:${port}`);
     
     // --- Start Listening ---

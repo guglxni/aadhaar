@@ -1,0 +1,67 @@
+{
+  "suiteStartTime": "2025-08-22T12:38:12.775Z",
+  "totalTests": 4,
+  "passed": 2,
+  "failed": 2,
+  "testResults": [
+    {
+      "testName": "server-health-check",
+      "timestamp": "2025-08-22T12:38:12.385Z",
+      "status": "FAILED",
+      "duration": 20,
+      "error": "expected 200 \"OK\", got 404 \"Not Found\""
+    },
+    {
+      "testName": "uidai-config-check",
+      "timestamp": "2025-08-22T12:38:12.406Z",
+      "status": "PASSED",
+      "duration": 5
+    },
+    {
+      "testName": "live-otp-generation",
+      "timestamp": "2025-08-22T12:38:12.411Z",
+      "status": "PASSED",
+      "duration": 185
+    },
+    {
+      "testName": "invalid-uid-handling",
+      "timestamp": "2025-08-22T12:38:12.597Z",
+      "status": "FAILED",
+      "duration": 178,
+      "error": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m"
+    }
+  ],
+  "uidaiResponses": [
+    {
+      "timestamp": "2025-08-22T12:38:12.596Z",
+      "endpoint": "/auth/qr",
+      "uid": "999999990019",
+      "status": 200,
+      "body": {
+        "success": true,
+        "qrDataUrl": "data:image/png;base64,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",
+        "authUrl": "http://localhost:3002/auth/verify/sess_m3royjk5h_memtge66?uid=999999990019&redirectUri=http%3A%2F%2Flocalhost%3A3003%2Fcallback",
+        "txnId": "qr-txn-sess_m3royjk5h_memtge66-1755866292594",
+        "sessionId": "sess_m3royjk5h_memtge66",
+        "expiresIn": 300,
+        "message": "QR code generated successfully",
+        "instructions": {
+          "step1": "Scan this QR code with your mobile device",
+          "step2": "Enter the OTP sent to your registered mobile number",
+          "step3": "Complete authentication on your mobile device"
+        }
+      },
+      "responseTime": 183
+    }
+  ],
+  "errorAnalysis": [
+    {
+      "errorCode": "998",
+      "actionCode": "A202",
+      "errorMeaning": "UIDAI Service Temporarily Unavailable - Authentication temporarily not available, retry after sometime",
+      "isClientIssue": false,
+      "recommendedAction": "Wait for UIDAI service to recover. Implement exponential backoff retry.",
+      "timestamp": "2025-08-22T12:38:03.519Z"
+    }
+  ]
+}

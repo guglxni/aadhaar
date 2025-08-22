@@ -41,7 +41,7 @@
         const backHomeBtn = document.getElementById('backHomeBtn');
         const fabHome = document.getElementById('fabHome');
         const params = new URLSearchParams(window.location.search);
-        const idToken = params.get('idToken');
+        const idToken = params.get('idToken') || params.get('token'); // Support both parameter names
         const error = params.get('error');
         const errorDescription = params.get('error_description');
         function showSuccessBanner(message) {
